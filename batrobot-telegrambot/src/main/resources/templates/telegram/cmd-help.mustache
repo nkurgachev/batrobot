@@ -1,0 +1,14 @@
+<b>{{header}}</b>
+
+{{#commands}}
+<b>/{{command}}</b>
+<i>{{description}}</i>
+{{{usageLabel}}}: <code>{{usage}}</code>
+{{#hasExample}}
+{{{exampleLabel}}}: <code>{{example}}</code>
+{{/hasExample}}
+{{#hasNote}}
+{{{noteLabel}}}: {{note}}
+{{/hasNote}}
+
+{{/commands}}

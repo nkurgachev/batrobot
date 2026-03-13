@@ -1,0 +1,13 @@
+<b>{{header}}</b>
+
+{{#userMatches}}
+👤 {{fullName}}
+{{#players}}
+{{index}}) <i>{{steamUsername}}</i> 📊 {{{winCount}}} / {{{matchCount}}}
+{{#matches}}
+⏱️ <a href="{{matchUrl}}">{{matchTime}}</a> {{{result}}} <b>{{heroName}}</b>{{#position}} {{{position}}}{{/position}} <code>{{kda}}</code>{{#award}} {{{award}}}{{/award}}{{#imp}} {{{imp}}}{{/imp}}
+{{/matches}}
+
+{{/players}}
+
+{{/userMatches}}

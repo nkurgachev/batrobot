@@ -1,0 +1,27 @@
+{"properties": [
+  {
+    "name": "telegram.bot.token",
+    "type": "java.lang.String",
+    "description": "TOken for Telegram Bot API"
+  },
+  {
+    "name": "telegram.bot.username",
+    "type": "java.lang.String",
+    "description": "Username for Telegram Bot"
+  },
+  {
+    "name": "stratz.api.token",
+    "type": "java.lang.String",
+    "description": "Token for Stratz API"
+  },
+  {
+    "name": "stratz.api.base-url",
+    "type": "java.lang.String",
+    "description": "Base URL for Stratz API"
+  },
+  {
+    "name": "steam.api.token",
+    "type": "java.lang.String",
+    "description": "Token for Steam API"
+  }
+]}

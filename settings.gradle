@@ -1,0 +1,22 @@
+pluginManagement {
+	plugins {
+		id 'org.springframework.boot' version "${springBootVersion}"
+		id 'io.spring.dependency-management' version "${springDependencyManagementPluginVersion}"
+	}
+}
+
+rootProject.name = 'batrobot'
+
+include 'batrobot-adapter-stratz'
+include 'batrobot-adapter-steam'
+include 'batrobot-orchestration'
+include 'batrobot-ingestion'
+include 'batrobot-telegrambot'
+include 'batrobot-core-binding'
+include 'batrobot-core-chat'
+include 'batrobot-core-user'
+include 'batrobot-core-player'
+include 'batrobot-core-match'
+include 'batrobot-core-playerstats'
+include 'batrobot-core-rankhistory'
+include 'batrobot-shared'

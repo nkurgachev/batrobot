@@ -1,0 +1,19 @@
+spring:
+  h2:
+    console:
+      enabled: true
+  flyway:
+    clean-disabled: false
+
+telegram:
+  bot:
+    token: ${TELEGRAM_BOT_TOKEN:}
+    username: ${TELEGRAM_BOT_USERNAME:}
+
+stratz:
+  api:
+    token: ${STRATZ_API_TOKEN:}
+
+steam:
+  api:
+    token: ${STEAM_API_TOKEN:}

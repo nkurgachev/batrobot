@@ -1,0 +1,4 @@
+stratz:
+  api:
+    base-url: https://api.stratz.com
+    token: test-token
