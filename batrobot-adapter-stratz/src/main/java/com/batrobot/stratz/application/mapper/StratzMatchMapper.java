@@ -4,9 +4,9 @@ import com.batrobot.stratz.application.dto.response.StratzMatchResponse;
 import com.batrobot.stratz.application.dto.response.StratzMatchesResponse;
 import com.batrobot.stratz.application.dto.response.StratzPlayerMatchStatsResponse;
 
-import com.batrobot.stratz.generated.types.MatchPlayerType;
-import com.batrobot.stratz.generated.types.MatchType;
-import com.batrobot.stratz.generated.types.PlayerType;
+import io.github.nkurgachev.stratz.generated.types.MatchPlayerType;
+import io.github.nkurgachev.stratz.generated.types.MatchType;
+import io.github.nkurgachev.stratz.generated.types.PlayerType;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

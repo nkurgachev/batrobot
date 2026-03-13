@@ -4,10 +4,16 @@
 
 ## Что нужно для запуска
 
-- VPS с Linux и доступом по SSH
+**На локальной машине (для сборки образа):**
+
+- Docker Engine 24+
+- Аккаунт в публичном реестре — Docker Hub или GitHub Container Registry
+
+**На VPS:**
+
+- Linux с доступом по SSH
 - Docker Engine 24+
 - Docker Compose Plugin 2+
-- 1 vCPU / 1-2 GB RAM минимум
 - домен не обязателен, если бот используется только через Telegram
 
 Рекомендуемый минимальный сервер для стабильной работы:
@@ -15,7 +21,7 @@
 - 1 vCPU
 - 2 GB RAM
 - 10+ GB SSD
-- Ubuntu 22.04 LTS или Debian 12
+- Debian 12
 
 ## Подготовка VPS
 
@@ -35,12 +41,12 @@ sudo apt upgrade -y
 ### 3. Установить Docker и Compose plugin
 
 ```bash
-sudo apt install -y ca-certificates curl gnupg
+sudo apt install -y ca-certificates curl
 sudo install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 sudo chmod a+r /etc/apt/keyrings/docker.gpg
 echo \
-	"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+	"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
 	$(. /etc/os-release && echo $VERSION_CODENAME) stable" | \
 	sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt update
@@ -61,6 +67,48 @@ docker --version
 docker compose version
 ```
 
+## Сборка образа и публикация в реестр
+
+Dockerfile использует многоэтапную сборку: Gradle компилирует проект внутри контейнера. На VPS с 1 GB RAM это занимает десятки минут и нередко падает по OOM. **Собирайте образ локально** на своей машине и публикуйте готовый в публичный реестр — на VPS останется только `docker pull`.
+
+### Docker Hub
+
+1. Создайте аккаунт на [hub.docker.com](https://hub.docker.com) и публичный репозиторий `batrobot`.
+2. Авторизуйтесь локально (один раз):
+
+```bash
+docker login
+```
+
+3. Соберите и опубликуйте образ:
+
+```bash
+docker build -t your-dockerhub-username/batrobot:latest .
+docker push your-dockerhub-username/batrobot:latest
+```
+
+Для тегирования конкретной версии:
+
+```bash
+docker build -t your-dockerhub-username/batrobot:1.0.0 .
+docker push your-dockerhub-username/batrobot:1.0.0
+# Обновить latest отдельно, если нужно
+docker tag your-dockerhub-username/batrobot:1.0.0 your-dockerhub-username/batrobot:latest
+docker push your-dockerhub-username/batrobot:latest
+```
+
+### GitHub Container Registry (альтернатива)
+
+```bash
+# Авторизация — нужен PAT с правом write:packages
+echo YOUR_PAT | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
+
+docker build -t ghcr.io/your-github-username/batrobot:latest .
+docker push ghcr.io/your-github-username/batrobot:latest
+```
+
+Чтобы образ был публично доступен, откройте его настройки в разделе **Packages → Change visibility → Public**.
+
 ## Развертывание проекта
 
 ### 1. Клонировать репозиторий
@@ -75,6 +123,8 @@ cd batrobot
 В корне проекта создайте `.env`:
 
 ```dotenv
+BATROBOT_IMAGE=your-dockerhub-username/batrobot:latest
+
 SPRING_PROFILES_ACTIVE=prod
 
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token
@@ -87,7 +137,7 @@ DAY_TIMEZONE=Europe/Moscow
 INGESTION_STRATZ_HISTORICAL_START=1767225600
 INGESTION_STRATZ_MATCHES_LIMIT=20
 
-JAVA_OPTS=-XX:MaxRAMPercentage=60.0 -XX:InitialRAMPercentage=15.0 -Dfile.encoding=UTF-8
+JAVA_OPTS=-XX:MaxRAMPercentage=50.0 -XX:InitialRAMPercentage=10.0 -Dfile.encoding=UTF-8
 ```
 
 Для VPS с ограниченными ресурсами лучше начать с более консервативного `JAVA_OPTS`, чем desktop-дефолт. Если на сервере 1 GB RAM, можно попробовать:
@@ -107,7 +157,8 @@ mkdir -p data
 ### 4. Собрать и запустить сервис
 
 ```bash
-docker compose up -d --build
+docker compose pull
+docker compose up -d
 ```
 
 ### 5. Проверить состояние контейнера
@@ -163,25 +214,33 @@ docker compose logs -f batrobot
 
 ## Обновление приложения на VPS
 
-### 1. Забрать новый код
+### 1. Собрать и опубликовать новый образ (локально)
+
+```bash
+docker build -t your-dockerhub-username/batrobot:latest .
+docker push your-dockerhub-username/batrobot:latest
+```
+
+### 2. Забрать версию compose-файла на VPS
 
 ```bash
 git pull
 ```
 
-### 2. Пересобрать и перезапустить контейнер
+### 3. Обновить и перезапустить контейнер
 
 ```bash
-docker compose up -d --build
+docker compose pull
+docker compose up -d
 ```
 
-### 3. Удалить старые dangling images
+### 4. Удалить старые dangling images
 
 ```bash
 docker image prune -f
 ```
 
-На слабом VPS это особенно полезно, чтобы не забивать диск временными слоями.
+На слабом VPS это особенно полезно, чтобы не забивать диск старыми слоями.
 
 ## Полезные команды эксплуатации
 
@@ -217,7 +276,7 @@ docker stats
 
 ## Рекомендации для слабого VPS
 
-- Не запускайте на том же сервере тяжелые CI jobs и другие JVM-сервисы.
+- Не запускайте на VPS другие JVM-сервисы или лишние контейнеры рядом с ботом.
 - Не ставьте слишком высокий `INGESTION_STRATZ_MATCHES_LIMIT`, если мало RAM и CPU.
 - Оставляйте минимум 2-3 GB свободного места на диске под Docker layers и H2 database.
 - Если сервер с 1 GB RAM, желательно включить swap на хосте.
@@ -256,10 +315,6 @@ tar -czf batrobot-backup-$(date +%F).tar.gz .env data
 - доступность `STRATZ_API_TOKEN` и `STEAM_API_TOKEN`
 - логи через `docker compose logs batrobot`
 
-### Не хватает памяти при сборке образа
-
-На очень слабом VPS сборка Java-образа может быть тяжелой. В таком случае лучше собирать образ в CI или локально, затем выкладывать готовый image в registry и на VPS делать только `docker pull`.
-
 ### Бот не отвечает, но контейнер работает
 
 Проверьте:
@@ -277,7 +332,7 @@ tar -czf batrobot-backup-$(date +%F).tar.gz .env data
 
 ## Что можно улучшить позже
 
-- сборка Docker image в CI и доставка готового образа через registry
+- автоматизация сборки и публикации образа через CI (например, GitHub Actions)
 - переход с H2 на PostgreSQL для более предсказуемой прод-эксплуатации
 - systemd unit для автоматического `docker compose up` после reboot
 - внешний reverse proxy, если появится HTTP API для внешних клиентов

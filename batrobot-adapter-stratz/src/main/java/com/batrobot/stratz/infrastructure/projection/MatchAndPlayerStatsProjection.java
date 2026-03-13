@@ -1,7 +1,7 @@
 package com.batrobot.stratz.infrastructure.projection;
 
-import com.batrobot.stratz.generated.client.PlayerProjectionRoot;
-import com.batrobot.stratz.generated.types.PlayerMatchesRequestType;
+import io.github.nkurgachev.stratz.generated.client.PlayerProjectionRoot;
+import io.github.nkurgachev.stratz.generated.types.PlayerMatchesRequestType;
 
 import lombok.experimental.UtilityClass;
 

@@ -2,10 +2,10 @@ package com.batrobot.stratz.infrastructure;
 
 import com.batrobot.stratz.application.exception.StratzUnavailableException;
 import com.batrobot.stratz.infrastructure.config.StratzRateLimiterNames;
-import com.batrobot.stratz.client.StratzGraphQLClient;
-import com.batrobot.stratz.client.exception.StratzAuthException;
-import com.batrobot.stratz.client.exception.StratzRateLimitException;
-import com.batrobot.stratz.client.exception.StratzServerException;
+import io.github.nkurgachev.stratz.client.StratzGraphQLClient;
+import io.github.nkurgachev.stratz.client.exception.StratzAuthException;
+import io.github.nkurgachev.stratz.client.exception.StratzRateLimitException;
+import io.github.nkurgachev.stratz.client.exception.StratzServerException;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;

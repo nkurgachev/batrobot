@@ -34,8 +34,8 @@ dependencies {
 
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
 
-    implementation 'com.batrobot:stratz-graphql-api-codegen:1.0.0'
-    implementation 'com.batrobot:stratz-graphql-api-client:1.0.0'
+    implementation "io.github.nkurgachev:stratz-graphql-api-codegen:${stratzGraphqlApiVersion}"
+    implementation "io.github.nkurgachev:stratz-graphql-api-client:${stratzGraphqlApiVersion}"
 
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
 

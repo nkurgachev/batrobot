@@ -2,7 +2,7 @@ package com.batrobot.stratz.application.mapper;
 
 import com.batrobot.stratz.application.dto.response.StratzPlayerResponse;
 import com.batrobot.shared.domain.model.valueobject.SteamId;
-import com.batrobot.stratz.generated.types.PlayerType;
+import io.github.nkurgachev.stratz.generated.types.PlayerType;
 
 import org.mapstruct.*;
 

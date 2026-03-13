@@ -1,8 +1,6 @@
 services:
   batrobot:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ${BATROBOT_IMAGE}
     container_name: batrobot
     init: true
     restart: unless-stopped

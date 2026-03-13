@@ -8,9 +8,9 @@ import com.batrobot.stratz.infrastructure.projection.PlayersProjection;
 
 import com.batrobot.shared.domain.model.valueobject.SteamId;
 
-import com.batrobot.stratz.generated.client.PlayersGraphQLQuery;
-import com.batrobot.stratz.generated.client.PlayersProjectionRoot;
-import com.batrobot.stratz.generated.types.PlayerType;
+import io.github.nkurgachev.stratz.generated.client.PlayersGraphQLQuery;
+import io.github.nkurgachev.stratz.generated.client.PlayersProjectionRoot;
+import io.github.nkurgachev.stratz.generated.types.PlayerType;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

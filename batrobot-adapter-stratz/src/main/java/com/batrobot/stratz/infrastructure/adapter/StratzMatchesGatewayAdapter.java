@@ -8,9 +8,9 @@ import com.batrobot.stratz.infrastructure.projection.MatchAndPlayerStatsProjecti
 
 import com.batrobot.shared.domain.model.valueobject.SteamId;
 
-import com.batrobot.stratz.generated.client.PlayerGraphQLQuery;
-import com.batrobot.stratz.generated.client.PlayerProjectionRoot;
-import com.batrobot.stratz.generated.types.PlayerType;
+import io.github.nkurgachev.stratz.generated.client.PlayerGraphQLQuery;
+import io.github.nkurgachev.stratz.generated.client.PlayerProjectionRoot;
+import io.github.nkurgachev.stratz.generated.types.PlayerType;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
