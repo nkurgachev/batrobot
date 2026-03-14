@@ -10,7 +10,7 @@ public class OrchestrationUserNoAccountsException extends OrchestrationCommandEx
     private static final String MESSAGE_KEY = "common.exception.user_no_accounts";
 
     public OrchestrationUserNoAccountsException(Long chatId, Long userId) {
-        super("No linked accounts for user " + userId + " in chat " + chatId, 
-        MESSAGE_KEY);
+        super("No linked accounts for user " + userId + " in chat " + chatId,
+                MESSAGE_KEY);
     }
 }

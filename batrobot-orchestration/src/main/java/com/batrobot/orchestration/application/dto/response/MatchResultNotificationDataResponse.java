@@ -22,6 +22,7 @@ public record MatchResultNotificationDataResponse(
             String telegramUsername,
             String firstName,
             String lastName,
+            String emoji,
             String steamUsername,
             String lobbyType,
             String gameMode) {

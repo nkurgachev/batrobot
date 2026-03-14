@@ -1,0 +1,2 @@
+ALTER TABLE users
+    ADD COLUMN emodzi VARCHAR(32) NOT NULL DEFAULT '👤';

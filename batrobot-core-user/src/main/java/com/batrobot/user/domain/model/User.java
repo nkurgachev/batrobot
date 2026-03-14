@@ -18,6 +18,8 @@ import java.util.UUID;
 @ToString(of = { "id", "telegramUserId", "username", "firstName", "lastName" })
 public class User extends BaseAggregateRoot {
 
+    public static final String DEFAULT_EMOJI = "👤";
+
     // === Identity ===
     private final UUID id;
     private final TelegramUserId telegramUserId;
@@ -27,6 +29,7 @@ public class User extends BaseAggregateRoot {
     private String username;
     private String firstName;
     private String lastName;
+    private String emoji;
 
     // === Audit fields ===
     private final OffsetDateTime createdAt;
@@ -46,6 +49,7 @@ public class User extends BaseAggregateRoot {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.emoji = DEFAULT_EMOJI;
 
         this.createdAt = OffsetDateTime.now();
         this.updatedAt = this.createdAt;
@@ -60,6 +64,7 @@ public class User extends BaseAggregateRoot {
             String username,
             String firstName,
             String lastName,
+            String emoji,
             OffsetDateTime createdAt,
             OffsetDateTime updatedAt) {
         this.id = id;
@@ -68,6 +73,7 @@ public class User extends BaseAggregateRoot {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.emoji = normalizeEmoji(emoji);
 
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -101,6 +107,7 @@ public class User extends BaseAggregateRoot {
             String username,
             String firstName,
             String lastName,
+            String emoji,
             OffsetDateTime createdAt,
             OffsetDateTime updatedAt) {
         return new User(
@@ -109,6 +116,7 @@ public class User extends BaseAggregateRoot {
                 username,
                 firstName,
                 lastName,
+                emoji,
                 createdAt,
                 updatedAt);
     }
@@ -144,6 +152,20 @@ public class User extends BaseAggregateRoot {
         return changed;
     }
 
+    /**
+     * Updates user's preferred emoji. Returns true if entity was changed.
+     */
+    public boolean updateEmoji(String newEmoji) {
+        String normalized = normalizeEmoji(newEmoji);
+        boolean changed = updateField(normalized, this.emoji, val -> this.emoji = val);
+
+        if (changed) {
+            this.updatedAt = OffsetDateTime.now();
+        }
+
+        return changed;
+    }
+
     // ==================== Query Methods ====================
 
     /**
@@ -160,6 +182,13 @@ public class User extends BaseAggregateRoot {
             return !fullName.isEmpty() ? fullName : (username != null ? username : "Unknown");
         }
         return username != null ? username : "Unknown";
+    }
+
+    private static String normalizeEmoji(String emoji) {
+        if (emoji == null || emoji.isBlank()) {
+            return DEFAULT_EMOJI;
+        }
+        return emoji;
     }
 }
 

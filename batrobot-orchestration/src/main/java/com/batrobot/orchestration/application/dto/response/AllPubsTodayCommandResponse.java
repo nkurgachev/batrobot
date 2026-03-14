@@ -13,6 +13,7 @@ public record AllPubsTodayCommandResponse(
             String telegramUsername,
             String firstName,
             String lastName,
+            String emoji,
             List<PlayerMatchHistory> players) {
 
         /**

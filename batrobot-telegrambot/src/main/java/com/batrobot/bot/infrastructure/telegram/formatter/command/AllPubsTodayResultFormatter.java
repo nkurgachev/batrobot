@@ -51,8 +51,7 @@ public class AllPubsTodayResultFormatter extends BaseResultFormatter {
 
         Map<String, Object> model = Map.of(
                 "header", messageSource.getMessage(MESSAGE_KEY_HEADER, null, resolveLocale(languageCode)),
-                "userMatches", userMatches
-        );
+                "userMatches", userMatches);
         return templateRenderer.render(TEMPLATE_NAME, model);
     }
 
@@ -62,9 +61,9 @@ public class AllPubsTodayResultFormatter extends BaseResultFormatter {
                 .toList();
 
         return Map.of(
+                "emoji", resolveEmoji(userGroup.emoji()),
                 "fullName", formatFullName(userGroup.firstName(), userGroup.lastName(), userGroup.telegramUsername()),
-                "players", players
-        );
+                "players", players);
     }
 
     private Map<String, Object> buildPlayerModel(PlayerMatchHistory player, Integer index) {
@@ -81,8 +80,7 @@ public class AllPubsTodayResultFormatter extends BaseResultFormatter {
                 "steamUsername", player.steamUsername(),
                 "winCount", wins,
                 "matchCount", player.matches().size(),
-                "matches", matches
-        );
+                "matches", matches);
     }
 
     private Map<String, Object> buildMatchModel(MatchStats match) {

@@ -36,7 +36,7 @@ app:
     timezone: ${DAY_TIMEZONE:Europe/Moscow}
   reputation:
     fixed-reputations:
-      #telegramUsername: reputaionValue
+      '[telegramUsername]': 0
 
 telegram:
   bot:
@@ -45,7 +45,7 @@ telegram:
   locale:
     default-locale: ru
     overrides:
-      #telegramUsername: languageCode
+      '[telegramUsername]': languageCode
 
 stratz:
   api:

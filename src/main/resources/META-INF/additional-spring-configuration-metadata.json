@@ -10,6 +10,17 @@
     "description": "Username for Telegram Bot"
   },
   {
+    "name": "telegram.locale.default-locale",
+    "type": "java.lang.String",
+    "description": "Default locale for the application, used when no specific locale is set for a user or notification."
+  },
+  {
+    "name": "telegram.locale.overrides",
+    "type": "java.util.Map<java.lang.String, java.lang.String>",
+    "description": "Map of locale overrides for specific users, where key is the user's identifier and value is the locale to be used for that user."
+  },
+
+  {
     "name": "stratz.api.token",
     "type": "java.lang.String",
     "description": "Token for Stratz API"
@@ -19,9 +30,59 @@
     "type": "java.lang.String",
     "description": "Base URL for Stratz API"
   },
+
   {
     "name": "steam.api.token",
     "type": "java.lang.String",
     "description": "Token for Steam API"
+  },
+  {
+    "name": "steam.api.base-url",
+    "type": "java.lang.String",
+    "description": "Base URL for Steam API"
+  },
+
+  {
+    "name": "app.day.start-hour",
+    "type": "java.lang.Integer",
+    "description": "Start hour for a specific day."
+  },
+  {
+    "name": "app.day.timezone",
+    "type": "java.lang.String",
+    "description": "Timezone for a specific day."
+  },
+  
+  {
+    "name": "app.reputation.fixed-reputations",
+    "type": "java.util.Map<java.lang.String, java.lang.Integer>",
+    "description": "Map of fixed reputations for specific users, where key is the user's identifier and value is the fixed reputation score."
+  },
+
+  {
+    "name": "ingestion.stratz.scheduler.match-update-cron",
+    "type": "java.lang.String",
+    "description": "Cron for scheduling Stratz match updates."
+  },
+  {
+    "name": "ingestion.stratz.scheduler.player-update-cron",
+    "type": "java.lang.String",
+    "description": "Cron for scheduling Stratz player updates."
+  },
+  {
+    "name": "ingestion.stratz.sync.historical-start-timestamp",
+    "type": "java.lang.Long",
+    "description": "Historical start timestamp for Stratz sync."
+  },
+  {
+    "name": "ingestion.stratz.sync.matches-limit",
+    "type": "java.lang.Integer",
+    "description": "Limit of matches per player in a single request."
+  },
+
+  {
+    "name": "logging.level.org.hibernate",
+    "type": "java.lang.String",
+    "description": "Logging level for Hibernate."
   }
 ]}

@@ -16,6 +16,7 @@ public record InGameCommandResponse(
             String telegramUsername,
             String firstName,
             String lastName,
+            String emoji,
             List<GameInfo> games) {
         
         /**

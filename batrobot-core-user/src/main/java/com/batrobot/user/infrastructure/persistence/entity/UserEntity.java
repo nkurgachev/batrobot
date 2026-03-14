@@ -26,6 +26,9 @@ public class UserEntity {
     private String firstName;
     
     private String lastName;
+
+    @Column(nullable = false)
+    private String emoji;
     
     @Column(nullable = false, updatable = false)
     private OffsetDateTime createdAt;

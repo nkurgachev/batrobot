@@ -12,6 +12,7 @@ public record UserResponse(
     String username,
     String firstName,
     String lastName,
+    String emoji,
     OffsetDateTime createdAt,
     OffsetDateTime updatedAt
 ) {

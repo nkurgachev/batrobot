@@ -16,6 +16,8 @@ import org.springframework.context.MessageSource;
  */
 public abstract class BaseResultFormatter {
 
+    protected static final String DEFAULT_EMOJI = "👤";
+
     protected Locale resolveLocale(String languageCode) {
         return Optional.ofNullable(languageCode)
                 .map(Locale::forLanguageTag)
@@ -78,6 +80,13 @@ public abstract class BaseResultFormatter {
         String last = lastName != null ? lastName : "";
         String fullName = (first + " " + last).trim();
         return fullName.isEmpty() ? fallback : fullName;
+    }
+
+    protected static String resolveEmoji(String emoji) {
+        if (emoji == null || emoji.isBlank()) {
+            return DEFAULT_EMOJI;
+        }
+        return emoji;
     }
 
     protected static String escapeHtml(String text) {

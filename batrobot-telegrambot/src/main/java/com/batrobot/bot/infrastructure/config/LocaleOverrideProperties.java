@@ -19,6 +19,10 @@ public class LocaleOverrideProperties {
     private String defaultLocale = Locale.getDefault().toLanguageTag();
     private Map<String, String> overrides = Map.of();
 
+    public void setOverrides(String ignored) {
+        this.overrides = Map.of();
+    }
+
     public Locale notificationLocale() {
         return Locale.forLanguageTag(defaultLocale);
     }

@@ -26,6 +26,7 @@ public record TopPubersResponse(
             String firstName,
             String lastName,
             String telegramUsername,
+            String emoji,
             String steamUsername,
             Integer seasonRank) {
     }

@@ -67,6 +67,7 @@ public class TopPubersResultFormatter extends BaseResultFormatter {
     private Map<String, Object> buildPlayerModel(PuberInfo puber, Integer index) {
         return Map.of(
                 "index", index,
+                "emoji", resolveEmoji(puber.emoji()),
                 "fullName", formatFullName(puber.firstName(), puber.lastName(), puber.telegramUsername()),
                 "steamUsername", puber.steamUsername() != null ? puber.steamUsername() : "unknown");
     }

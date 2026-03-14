@@ -15,6 +15,7 @@ public record RepsCommandResponse(
         String telegramUsername,
         String firstName,
         String lastName,
+        String emoji,
         Integer reputation
     ) {
     }

@@ -85,6 +85,3 @@ public class PlayerMatchStatsEntity {
     @Column(nullable = false)
     private OffsetDateTime updatedAt;
 }
-
-
-

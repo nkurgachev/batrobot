@@ -17,4 +17,8 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "app.reputation")
 public class ReputationConfigAdapter implements ReputationConfig {
     private Map<String, Integer> fixedReputations = Map.of();
+
+    public void setFixedReputations(String ignored) {
+        this.fixedReputations = Map.of();
+    }
 }

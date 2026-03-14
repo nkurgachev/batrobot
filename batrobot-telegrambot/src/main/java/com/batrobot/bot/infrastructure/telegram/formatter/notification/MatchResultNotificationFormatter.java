@@ -47,8 +47,8 @@ public class MatchResultNotificationFormatter extends BaseResultFormatter {
 
         Map<String, Object> model = new HashMap<>();
         model.put("header", messageSource.getMessage(MESSAGE_KEY_HEADER, null, locale));
-        model.put("fullName", formatFullName(target.firstName(), target.lastName(),
-                mention(target.telegramUsername())));
+        model.put("emoji", resolveEmoji(target.emoji()));
+        model.put("fullName", formatFullName(target.firstName(), target.lastName(), mention(target.telegramUsername())));
         model.put("on", messageSource.getMessage(MESSAGE_KEY_ON, null, locale));
         model.put("steamUsername", target.steamUsername() != null ? target.steamUsername() : "unknown");
         model.put("matchUrl", STRATZ_MATCH_URL + matchId);

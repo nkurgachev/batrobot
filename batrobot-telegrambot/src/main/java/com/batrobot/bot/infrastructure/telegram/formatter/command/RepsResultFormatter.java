@@ -44,6 +44,7 @@ public class RepsResultFormatter extends BaseResultFormatter {
     private Map<String, Object> buildUserModel(UserReputation user, Integer index) {
         return Map.of(
                 "index", index,
+                "emoji", resolveEmoji(user.emoji()),
                 "fullName", formatFullName(user.firstName(), user.lastName(), user.telegramUsername()),
                 "reputation", formatReputation(user.reputation()));
     }

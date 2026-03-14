@@ -30,6 +30,7 @@ public interface UserEntityMapper {
             entity.getUsername(),
             entity.getFirstName(),
             entity.getLastName(),
+            entity.getEmoji(),
             entity.getCreatedAt(),
             entity.getUpdatedAt()
         );

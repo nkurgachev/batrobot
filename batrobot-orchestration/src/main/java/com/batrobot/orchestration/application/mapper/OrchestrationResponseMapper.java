@@ -15,6 +15,7 @@ import com.batrobot.orchestration.application.dto.response.InGameCommandResponse
 import com.batrobot.orchestration.application.dto.response.MeCommandResponse;
 import com.batrobot.orchestration.application.dto.response.MatchResultNotificationDataResponse.MatchNotificationTarget;
 import com.batrobot.orchestration.application.dto.response.RepsCommandResponse;
+import com.batrobot.orchestration.application.dto.response.SetEmojiCommandResponse;
 import com.batrobot.orchestration.application.dto.response.UnbindCommandResponse;
 import com.batrobot.orchestration.application.dto.response.AllPubsTodayCommandResponse.UserMatchHistory;
 import com.batrobot.orchestration.application.dto.response.AllPubsTodayCommandResponse.UserMatchHistory.PlayerMatchHistory;
@@ -148,6 +149,7 @@ public interface OrchestrationResponseMapper {
     @Mapping(target = "telegramUsername", source = "user.username")
     @Mapping(target = "firstName", source = "user.firstName")
     @Mapping(target = "lastName", source = "user.lastName")
+    @Mapping(target = "emoji", source = "user.emoji")
     @Mapping(target = "games", source = "gameInfo")
     UserGameStatus toUserGameStatus(
             UserResponse user,
@@ -163,6 +165,7 @@ public interface OrchestrationResponseMapper {
     @Mapping(target = "telegramUsername", source = "user.username")
     @Mapping(target = "firstName", source = "user.firstName")
     @Mapping(target = "lastName", source = "user.lastName")
+    @Mapping(target = "emoji", source = "user.emoji")
     @Mapping(target = "reputation", source = "reputation")
     UserReputation toUserReputation(
             UserResponse user,
@@ -188,6 +191,7 @@ public interface OrchestrationResponseMapper {
     @Mapping(target = "firstName", source = "user.firstName")
     @Mapping(target = "lastName", source = "user.lastName")
     @Mapping(target = "telegramUsername", source = "user.username")
+    @Mapping(target = "emoji", source = "user.emoji")
     @Mapping(target = "steamUsername", source = "player.steamUsername")
     @Mapping(target = "seasonRank", source = "player.seasonRank")
     PuberInfo toPuberInfo(
@@ -203,12 +207,18 @@ public interface OrchestrationResponseMapper {
     @Mapping(target = "telegramUsername", source = "user.username")
     @Mapping(target = "firstName", source = "user.firstName")
     @Mapping(target = "lastName", source = "user.lastName")
+    @Mapping(target = "emoji", source = "user.emoji")
     MatchNotificationTarget toMatchNotificationTarget(
             ChatPlayerBindingResponse binding,
             UserResponse user,
             String steamUsername,
             String lobbyType,
             String gameMode);
+
+    @Mapping(target = "telegramUserId", source = "telegramUserId")
+    @Mapping(target = "telegramUsername", source = "username")
+    @Mapping(target = "emoji", source = "emoji")
+    SetEmojiCommandResponse toSetEmojiCommandResponse(UserResponse user);
 
     /**
      * Wraps rank history list into response.
@@ -263,6 +273,7 @@ public interface OrchestrationResponseMapper {
                 user.username(),
                 user.firstName(),
                 user.lastName(),
+                user.emoji(),
                 players);
     }
 
@@ -289,7 +300,7 @@ public interface OrchestrationResponseMapper {
      * @return UserGameStatus DTO
      */
     default UserGameStatus toUserGameStatusFallback(Long telegramUserId, List<GameInfo> games) {
-        return new UserGameStatus(telegramUserId, "unknown", null, null, games);
+        return new UserGameStatus(telegramUserId, "unknown", null, null, "👤", games);
     }
 
 }

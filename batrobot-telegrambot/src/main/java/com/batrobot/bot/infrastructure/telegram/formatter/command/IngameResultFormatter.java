@@ -66,6 +66,7 @@ public class IngameResultFormatter extends BaseResultFormatter {
                 .toList();
 
         return Map.of(
+                "emoji", resolveEmoji(user.emoji()),
                 "fullName", formatFullName(user.firstName(), user.lastName(), user.telegramUsername()),
                 "games", games
         );
