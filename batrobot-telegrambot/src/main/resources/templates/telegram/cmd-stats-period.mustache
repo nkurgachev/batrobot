@@ -2,46 +2,54 @@
 
 {{#accounts}}
 ===== <i>{{steamUsername}}</i> =====
-┌ <b>{{{labels.pubs}}}</b> - {{totalMatches}}
+┌ <b>{{{labels.pubs}}}</b> - <code>{{totalMatches}}</code>
 {{#lobbies}}
-{{branch}} {{lobbyIcon}} {{matches}}  {{resultIcon}} {{winRate}}% ({{wins}} / {{losses}})
+{{branch}} {{lobbyIcon}} {{resultIcon}} <code>{{winRate}}% ({{wins}} / {{matches}})</code>
 {{/lobbies}}
 
-┌ <b>{{{labels.duration}}}</b> - {{averageDuration}}
-├ {{{labels.fastest}}} {{#fastestUrl}}<a href="{{fastestUrl}}">{{fastestDuration}}</a>{{/fastestUrl}}{{^fastestUrl}}{{dash}}{{/fastestUrl}}
-└ {{{labels.longest}}} {{#longestUrl}}<a href="{{longestUrl}}">{{longestDuration}}</a>{{/longestUrl}}{{^longestUrl}}{{dash}}{{/longestUrl}}
+┌ <b>{{{labels.duration}}}</b> - <code>{{averageDuration}}</code>
+├ <i>{{{labels.fastest}}}</i> {{#fastestUrl}}<a href="{{fastestUrl}}">{{fastestDuration}}</a>{{/fastestUrl}}{{^fastestUrl}}{{dash}}{{/fastestUrl}}
+└ <i>{{{labels.longest}}}</i> {{#longestUrl}}<a href="{{longestUrl}}">{{longestDuration}}</a>{{/longestUrl}}{{^longestUrl}}{{dash}}{{/longestUrl}}
 
-┌ <b>{{{labels.streaks}}}</b> - {{currentStreak}} {{currentResultIcon}}
-├ {{{labels.wins}}} {{maxWinStreak}}
-└ {{{labels.losses}}} {{maxLossStreak}}
+┌ <b>{{{labels.streaks}}}</b> - <code>{{currentStreak}}</code> {{currentResultIcon}}
+├ <i>{{{labels.wins}}}</i> <code>{{maxWinStreak}}</code>
+└ <i>{{{labels.losses}}}</i> <code>{{maxLossStreak}}</code>
 
-┌ <b>{{{labels.performance}}}</b> - {{averageImp}}
-├ {{{labels.kda}}} {{kdaRatio}} ({{totalKills}}/{{totalDeaths}}/{{totalAssists}})
-├ {{{labels.gpm}}} {{averageGpm}}
-├ {{{labels.xpm}}} {{averageXpm}}
-├ {{{labels.lastHits}}} {{averageLastHits}} / {{averageDenies}}
-├ {{{labels.damage}}}
-├ {{{labels.heroDamage}}} {{averageHeroDamage}}
-├ {{{labels.towerDamage}}} {{averageTowerDamage}}
-├ {{{labels.wards}}}
-├ {{{labels.observer}}} {{averageObserverWardsPurchased}} / {{averageObserverWardsDestroyed}}
-├ {{{labels.sentry}}} {{averageSentryWardsPurchased}} / {{averageSentryWardsDestroyed}}
-└ {{{labels.healing}}} {{averageHeroHealing}}
+┌ <b>{{{labels.performance}}}</b> - <code>{{averageImp}}</code>
+├ <i>{{{labels.kda}}}</i> <code>{{kdaRatio}} ({{totalKills}}/{{totalDeaths}}/{{totalAssists}})</code>
+├ <i>{{{labels.gpm}}}</i> <code>{{averageGpm}}</code>
+├ <i>{{{labels.xpm}}}</i> <code>{{averageXpm}}</code>
+├ <i>{{{labels.lastHits}}}</i> <code>{{averageLastHits}} | {{averageDenies}}</code>
+├ <i>{{{labels.damage}}}</i>
+├ <i>{{{labels.heroDamage}}}</i> <code>{{averageHeroDamage}}</code>
+├ <i>{{{labels.towerDamage}}}</i> <code>{{averageTowerDamage}}</code>
+├ <i>{{{labels.wards}}}</i>
+├ <i>{{{labels.observer}}}</i> <code>{{averageObserverWardsPurchased}} | {{averageObserverWardsDestroyed}}</code>
+├ <i>{{{labels.sentry}}}</i> <code>{{averageSentryWardsPurchased}} | {{averageSentryWardsDestroyed}}</code>
+└ <i>{{{labels.healing}}}</i> <code>{{averageHeroHealing}}</code>
 
 ┌ <b>{{{labels.positions}}}</b>
 {{#positions}}
-{{branch}} {{positionIcon}}: {{gameResultIcon}} {{gameWinRate}}% ({{laneResultIcon}} {{laneWinRate}}%)
+{{branch}} {{positionIcon}}: {{gameResultIcon}} <code>{{gameWinRate}}%</code> ({{laneResultIcon}} <code>{{laneWinRate}}%</code>)
 {{/positions}}
 
 ┌ <b>{{{labels.heroes}}}</b>
 {{#heroes}}
-{{branch}} {{heroName}} ({{matches}} 🎮, {{resultIcon}} {{winRate}}%)
+{{branch}} <i>{{heroName}}</i>: <code>{{matches}}</code> 🎮, {{resultIcon}} <code>{{winRate}}%</code>
 {{/heroes}}
 
 ┌ <b>{{{labels.achievements}}}</b>
-├ {{{labels.mvp}}} {{mvpCount}}
-├ {{{labels.topCore}}} {{topCoreCount}}
-├ {{{labels.topSupport}}} {{topSupportCount}}
-└ {{{labels.imp}}} {{totalImp}}
+{{#mvpCount}}
+├ {{{labels.mvp}}} <code>{{mvpCount}}</code>
+{{/mvpCount}}
+{{#topCoreCount}}
+├ {{{labels.topCore}}} <code>{{topCoreCount}}</code>
+{{/topCoreCount}}
+{{#topSupportCount}}
+├ {{{labels.topSupport}}} <code>{{topSupportCount}}</code>
+{{/topSupportCount}}
+{{#totalImp}}
+└ {{{labels.imp}}} <code>{{totalImp}}</code>
+{{/totalImp}}
 
 {{/accounts}}

@@ -401,7 +401,7 @@ public class GetUserStatsForPeriodQuery {
                 })
                 .sorted(Comparator
                         .comparingInt(HeroStats::matches).reversed()
-                        .thenComparingInt(HeroStats::wins).reversed()
+                        .thenComparing(Comparator.comparingInt(HeroStats::wins).reversed())
                         .thenComparing(HeroStats::heroName, String.CASE_INSENSITIVE_ORDER))
                 .limit(3)
                 .toList();
