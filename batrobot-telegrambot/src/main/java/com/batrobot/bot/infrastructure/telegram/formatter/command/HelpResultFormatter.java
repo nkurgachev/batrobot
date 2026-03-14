@@ -53,7 +53,7 @@ public class HelpResultFormatter extends BaseResultFormatter {
                 .filter(handler -> handler.getClass().isAnnotationPresent(CommandDocumentation.class))
                 .sorted(Comparator.comparing(handler ->
                         handler.getClass().getAnnotation(CommandHandlerComponent.class).value()))
-                .map(handler -> buildCommandModel(handler, locale))
+            .map(handler -> buildCommandModel(handler, locale))
                 .toList();
 
         Map<String, Object> model = Map.of(
@@ -66,7 +66,7 @@ public class HelpResultFormatter extends BaseResultFormatter {
         return result;
     }
 
-    private Map<String, Object> buildCommandModel(CommandHandler handler, Locale locale) {
+        private Map<String, Object> buildCommandModel(CommandHandler handler, Locale locale) {
         CommandHandlerComponent cmdAnnotation = handler.getClass()
                 .getAnnotation(CommandHandlerComponent.class);
         CommandDocumentation docAnnotation = handler.getClass()

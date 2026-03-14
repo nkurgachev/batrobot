@@ -27,7 +27,6 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 public class AllPubsTodayResultFormatter extends BaseResultFormatter {
 
-    private static final String STRATZ_MATCH_URL = "https://stratz.com/matches/";
     private static final String TEMPLATE_NAME = "cmd-all-pubs-today";
     private static final String MESSAGE_KEY_HEADER = "all_pubs_today.template.header";
 
@@ -57,7 +56,7 @@ public class AllPubsTodayResultFormatter extends BaseResultFormatter {
 
     private Map<String, Object> buildUserModel(UserMatchHistory userGroup) {
         List<Map<String, Object>> players = IntStream.range(0, userGroup.players().size())
-                .mapToObj(i -> buildPlayerModel(userGroup.players().get(i), i + 1))
+            .mapToObj(i -> buildPlayerModel(userGroup.players().get(i), i + 1))
                 .toList();
 
         return Map.of(
@@ -66,24 +65,24 @@ public class AllPubsTodayResultFormatter extends BaseResultFormatter {
                 "players", players);
     }
 
-    private Map<String, Object> buildPlayerModel(PlayerMatchHistory player, Integer index) {
+        private Map<String, Object> buildPlayerModel(PlayerMatchHistory player, Integer index) {
         long wins = player.matches().stream()
                 .filter(m -> Boolean.TRUE.equals(m.isVictory()))
                 .count();
 
         List<Map<String, Object>> matches = player.matches().stream()
-                .map(this::buildMatchModel)
+            .map(this::buildMatchModel)
                 .toList();
 
         return Map.of(
-                "index", index,
-                "steamUsername", player.steamUsername(),
-                "winCount", wins,
-                "matchCount", player.matches().size(),
-                "matches", matches);
+            "index", index,
+            "steamUsername", player.steamUsername(),
+            "winCount", wins,
+            "matchCount", player.matches().size(),
+            "matches", matches);
     }
 
-    private Map<String, Object> buildMatchModel(MatchStats match) {
+        private Map<String, Object> buildMatchModel(MatchStats match) {
         String matchTime = formatDateTime(match.startDateTime(), dayTimeConfig.getTimezone());
         String matchUrl = STRATZ_MATCH_URL + match.matchId();
         String result = formatResult(match.isVictory());
@@ -119,4 +118,5 @@ public class AllPubsTodayResultFormatter extends BaseResultFormatter {
 
         return model;
     }
+
 }

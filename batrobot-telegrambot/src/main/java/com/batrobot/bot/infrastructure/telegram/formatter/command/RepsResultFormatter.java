@@ -33,7 +33,7 @@ public class RepsResultFormatter extends BaseResultFormatter {
         Locale locale = resolveLocale(languageCode);
 
         List<Map<String, Object>> users = IntStream.range(0, response.users().size())
-                .mapToObj(i -> buildUserModel(response.users().get(i), i + 1))
+            .mapToObj(i -> buildUserModel(response.users().get(i), i + 1))
                 .toList();
 
         return templateRenderer.render(TEMPLATE_NAME, Map.of(

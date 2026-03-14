@@ -17,6 +17,7 @@ import org.springframework.context.MessageSource;
 public abstract class BaseResultFormatter {
 
     protected static final String DEFAULT_EMOJI = "👤";
+    protected static final String STRATZ_MATCH_URL = "https://stratz.com/matches/";
 
     protected Locale resolveLocale(String languageCode) {
         return Optional.ofNullable(languageCode)
@@ -193,6 +194,33 @@ public abstract class BaseResultFormatter {
                 }
             }
         };
+    }
+
+    protected static String formatDuration(Integer seconds) {
+        if (seconds == null || seconds <= 0) {
+            return "00:00";
+        }
+
+        int hours = seconds / 3600;
+        int minutes = (seconds % 3600) / 60;
+        int secs = seconds % 60;
+
+        if (hours > 0) {
+            return String.format("%d:%02d:%02d", hours, minutes, secs);
+        }
+        return String.format("%02d:%02d", minutes, secs);
+    }
+
+    protected static String formatOneDecimal(Double value) {
+        if (value == null) {
+            return "0.0";
+        }
+        return String.format(Locale.US, "%.1f", value);
+    }
+
+    protected static String resultIcon(Integer winRatePercent) {
+        int value = winRatePercent != null ? winRatePercent : 0;
+        return value >= 50 ? "🟢" : "🔴";
     }
 
     protected static String formatRankAsMedal(Integer rank, MessageSource messageSource, Locale locale) {

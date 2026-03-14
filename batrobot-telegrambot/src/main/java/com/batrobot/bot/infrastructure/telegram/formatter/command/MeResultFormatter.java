@@ -104,4 +104,5 @@ public class MeResultFormatter extends BaseResultFormatter {
                 "date", date,
                 "medal", medal);
     }
+
 }

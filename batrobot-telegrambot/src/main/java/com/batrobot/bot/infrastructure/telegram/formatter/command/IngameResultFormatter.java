@@ -32,9 +32,11 @@ public class IngameResultFormatter extends BaseResultFormatter {
     private final TelegramTemplateRenderer templateRenderer;
 
     /**
-     * Formats list of players currently in-game into a user-friendly message with HTML formatting.
+     * Formats list of players currently in-game into a user-friendly message with
+     * HTML formatting.
      *
-     * @param response response containing the list of Steam players currently in-game
+     * @param response     response containing the list of Steam players currently
+     *                     in-game
      * @param languageCode telegram language code
      * @return formatted HTML message string
      */
@@ -52,8 +54,7 @@ public class IngameResultFormatter extends BaseResultFormatter {
 
         Map<String, Object> model = Map.of(
                 "header", messageSource.getMessage(MESSAGE_KEY_HEADER, null, locale),
-                "users", users
-        );
+                "users", users);
 
         String result = templateRenderer.render(TEMPLATE_NAME, model);
         log.debug("Successfully formatted ingame results");
@@ -68,8 +69,7 @@ public class IngameResultFormatter extends BaseResultFormatter {
         return Map.of(
                 "emoji", resolveEmoji(user.emoji()),
                 "fullName", formatFullName(user.firstName(), user.lastName(), user.telegramUsername()),
-                "games", games
-        );
+                "games", games);
     }
 
     private Map<String, Object> buildGameModel(GameInfo game, String on, String playing) {
@@ -77,7 +77,6 @@ public class IngameResultFormatter extends BaseResultFormatter {
                 "on", on,
                 "playing", playing,
                 "steamUsername", game.steamUsername() != null ? game.steamUsername() : "Unknown",
-                "gameName", game.gameName() != null ? game.gameName() : "Unknown Game"
-        );
+                "gameName", game.gameName() != null ? game.gameName() : "Unknown Game");
     }
 }
