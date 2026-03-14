@@ -22,7 +22,7 @@ import com.batrobot.orchestration.application.exception.OrchestrationNoAccountsE
 import com.batrobot.orchestration.application.exception.OrchestrationAllPubsTodayNoMatchesException;
 import com.batrobot.orchestration.application.exception.OrchestrationUserNotFoundException;
 import com.batrobot.orchestration.application.mapper.OrchestrationResponseMapper;
-import com.batrobot.orchestration.application.port.config.DayTimeConfig;
+import com.batrobot.shared.application.port.config.AppDayTimeConfig;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -58,7 +57,7 @@ public class GetAllPubsTodayForChatQuery {
     private final GetChatByTelegramChatIdQuery getChatByTelegramChatIdQuery;
     private final GetUserByTelegramUserIdQuery getUserByTelegramUserIdQuery;
 
-    private final DayTimeConfig dayTimeConfigPort;
+    private final AppDayTimeConfig dayTimeConfigPort;
     private final OrchestrationResponseMapper responseMapper;
 
     /**
@@ -150,14 +149,15 @@ public class GetAllPubsTodayForChatQuery {
     }
 
     private long calculateDayStartTimestamp() {
-        LocalDateTime dayStart = LocalDate.now()
+        ZoneId zoneId = ZoneId.of(dayTimeConfigPort.getTimezone());
+        LocalDateTime now = LocalDateTime.now(zoneId);
+        LocalDateTime dayStart = now.toLocalDate()
                 .atTime(LocalTime.of(dayTimeConfigPort.getStartHour(), 0));
 
-        if (LocalDateTime.now().isBefore(dayStart)) {
+        if (now.isBefore(dayStart)) {
             dayStart = dayStart.minusDays(1);
         }
 
-        ZoneId zoneId = ZoneId.of(dayTimeConfigPort.getTimezone());
         long timestamp = dayStart.atZone(zoneId).toEpochSecond();
 
         log.debug("Day start: {} in {} timezone (timestamp: {})",

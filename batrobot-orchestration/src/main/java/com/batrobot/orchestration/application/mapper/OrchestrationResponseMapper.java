@@ -13,6 +13,7 @@ import com.batrobot.orchestration.application.dto.response.AllPubsTodayCommandRe
 import com.batrobot.orchestration.application.dto.response.BindCommandResponse;
 import com.batrobot.orchestration.application.dto.response.InGameCommandResponse;
 import com.batrobot.orchestration.application.dto.response.MeCommandResponse;
+import com.batrobot.orchestration.application.dto.response.MatchResultNotificationDataResponse.MatchNotificationTarget;
 import com.batrobot.orchestration.application.dto.response.RepsCommandResponse;
 import com.batrobot.orchestration.application.dto.response.UnbindCommandResponse;
 import com.batrobot.orchestration.application.dto.response.AllPubsTodayCommandResponse.UserMatchHistory;
@@ -122,6 +123,8 @@ public interface OrchestrationResponseMapper {
      */
     @Mapping(target = "matchId", expression = "java(match != null ? match.matchId() : stats.matchId())")
     @Mapping(target = "startDateTime", expression = "java(match != null ? match.startDateTime() : null)")
+    @Mapping(target = "lobbyType", expression = "java(match != null ? match.lobbyType() : null)")
+    @Mapping(target = "gameMode", expression = "java(match != null ? match.gameMode() : null)")
     @Mapping(target = "isVictory", source = "stats.isVictory")
     @Mapping(target = "heroName", source = "stats.heroName")
     @Mapping(target = "position", source = "stats.position")
@@ -157,6 +160,7 @@ public interface OrchestrationResponseMapper {
      * @param reputation User reputation score
      * @return UserReputation DTO
      */
+    @Mapping(target = "telegramUsername", source = "user.username")
     @Mapping(target = "firstName", source = "user.firstName")
     @Mapping(target = "lastName", source = "user.lastName")
     @Mapping(target = "reputation", source = "reputation")
@@ -190,6 +194,21 @@ public interface OrchestrationResponseMapper {
             ChatPlayerBindingResponse binding,
             UserResponse user,
             PlayerResponse player);
+
+    /**
+     * Converts binding + user + match metadata into match notification target.
+     */
+    @Mapping(target = "telegramChatId", source = "binding.chatId")
+    @Mapping(target = "telegramUserId", source = "binding.telegramUserId")
+    @Mapping(target = "telegramUsername", source = "user.username")
+    @Mapping(target = "firstName", source = "user.firstName")
+    @Mapping(target = "lastName", source = "user.lastName")
+    MatchNotificationTarget toMatchNotificationTarget(
+            ChatPlayerBindingResponse binding,
+            UserResponse user,
+            String steamUsername,
+            String lobbyType,
+            String gameMode);
 
     /**
      * Wraps rank history list into response.

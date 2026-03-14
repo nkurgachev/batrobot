@@ -31,6 +31,8 @@ public record AllPubsTodayCommandResponse(
                     Long matchId,
                     Long startDateTime,
                     Boolean isVictory,
+                    String lobbyType,
+                    String gameMode,
 
                     String heroName,
                     String position,

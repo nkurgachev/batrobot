@@ -5,9 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import com.batrobot.bot.infrastructure.config.LocaleOverrideProperties;
 import com.batrobot.bot.infrastructure.telegram.formatter.base.BaseResultFormatter;
 import com.batrobot.bot.infrastructure.telegram.formatter.base.TelegramTemplateRenderer;
 import com.batrobot.orchestration.application.dto.response.MatchResultNotificationDataResponse.MatchNotificationTarget;
+import com.batrobot.shared.application.port.config.AppDayTimeConfig;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -25,6 +27,8 @@ public class MatchResultNotificationFormatter extends BaseResultFormatter {
     private static final String MESSAGE_KEY_HEADER = "notification.match.template.header";
     private static final String MESSAGE_KEY_ON = "notification.match.template.on";
 
+    private final LocaleOverrideProperties localeProperties;
+    private final AppDayTimeConfig dayTimeConfig;
     private final MessageSource messageSource;
     private final TelegramTemplateRenderer templateRenderer;
 
@@ -39,7 +43,7 @@ public class MatchResultNotificationFormatter extends BaseResultFormatter {
             String position,
             String award,
             Integer imp) {
-        Locale locale = Locale.getDefault();
+        Locale locale = resolveNotificationLocale(localeProperties);
 
         Map<String, Object> model = new HashMap<>();
         model.put("header", messageSource.getMessage(MESSAGE_KEY_HEADER, null, locale));
@@ -48,7 +52,9 @@ public class MatchResultNotificationFormatter extends BaseResultFormatter {
         model.put("on", messageSource.getMessage(MESSAGE_KEY_ON, null, locale));
         model.put("steamUsername", target.steamUsername() != null ? target.steamUsername() : "unknown");
         model.put("matchUrl", STRATZ_MATCH_URL + matchId);
-        model.put("matchTime", formatDateTime(startDateTime));
+        model.put("lobbyType", target.lobbyType() != null ? formatLobbyType(target.lobbyType()) : "");
+        model.put("gameMode", target.gameMode() != null ? formatGameMode(target.gameMode()) : "");
+        model.put("matchTime", formatDateTime(startDateTime, dayTimeConfig.getTimezone()));
         model.put("result", formatResult(isVictory));
         model.put("heroName", heroName != null ? heroName : "unknown");
         model.put("kda", formatKda(kills, deaths, assists));

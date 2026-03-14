@@ -8,10 +8,12 @@ import java.util.List;
 public record MatchResultNotificationDataResponse(
         Long matchId,
         Long startDateTime,
+        Long endDateTime,
         List<MatchNotificationTarget> targets) {
 
     /**
-     * A single notification target: a chat, the user who has the Steam account bound,
+     * A single notification target: a chat, the user who has the Steam account
+     * bound,
      * and the Steam username of the player.
      */
     public record MatchNotificationTarget(
@@ -20,6 +22,8 @@ public record MatchResultNotificationDataResponse(
             String telegramUsername,
             String firstName,
             String lastName,
-            String steamUsername) {
+            String steamUsername,
+            String lobbyType,
+            String gameMode) {
     }
 }

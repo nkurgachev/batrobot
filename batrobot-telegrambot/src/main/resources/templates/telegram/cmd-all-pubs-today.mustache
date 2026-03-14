@@ -5,7 +5,7 @@
 {{#players}}
 {{index}}) <i>{{steamUsername}}</i> 📊 {{{winCount}}} / {{{matchCount}}}
 {{#matches}}
-⏱️ <a href="{{matchUrl}}">{{matchTime}}</a> {{{result}}} <b>{{heroName}}</b>{{#position}} {{{position}}}{{/position}} <code>{{kda}}</code>{{#award}} {{{award}}}{{/award}}{{#imp}} {{{imp}}}{{/imp}}
+{{lobbyType}}{{gameMode}} <a href="{{matchUrl}}">{{matchTime}}</a> {{{result}}} <b>{{heroName}}</b>{{#position}} {{{position}}}{{/position}} <code>{{kda}}</code>{{#award}} {{{award}}}{{/award}}{{#imp}} {{{imp}}}{{/imp}}
 {{/matches}}
 
 {{/players}}

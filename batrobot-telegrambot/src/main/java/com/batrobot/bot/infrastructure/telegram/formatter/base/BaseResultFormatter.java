@@ -1,6 +1,9 @@
 package com.batrobot.bot.infrastructure.telegram.formatter.base;
 
+import com.batrobot.bot.infrastructure.config.LocaleOverrideProperties;
+
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -17,6 +20,10 @@ public abstract class BaseResultFormatter {
         return Optional.ofNullable(languageCode)
                 .map(Locale::forLanguageTag)
                 .orElse(Locale.getDefault());
+    }
+
+    protected Locale resolveNotificationLocale(LocaleOverrideProperties localeProperties) {
+        return localeProperties.notificationLocale();
     }
 
     // Telegram supported HTML tags
@@ -101,7 +108,7 @@ public abstract class BaseResultFormatter {
     protected static String formatGameMode(String gameMode) {
         return switch (gameMode) {
             case "ABILITY_DRAFT" -> "AD";
-            case "ALL_PICK_RANKED" -> "RANKED";
+            case "ALL_PICK_RANKED" -> "AP";
             case "ALL_PICK" -> "AP";
             case "ALL_RANDOM_DEATH_MATCH" -> "ARDM";
             case "CAPTAINS_MODE" -> "CM";
@@ -109,7 +116,7 @@ public abstract class BaseResultFormatter {
             case "RANDOM_DRAFT" -> "RD";
             case "SINGLE_DRAFT" -> "SD";
             case "ALL_RANDOM" -> "AR";
-            case "TURBO" -> "TURBO";
+            case "TURBO" -> "⚡";
             default -> gameMode;
         };
     }
@@ -127,9 +134,9 @@ public abstract class BaseResultFormatter {
 
     protected static String formatLobbyType(String lobbyType) {
         return switch (lobbyType) {
-            case "RANKED" -> "RANKED";
-            case "UNRANKED" -> "UNRANKED";
-            case "BATTLE_CUP" -> "BC";
+            case "RANKED" -> "👑";
+            case "UNRANKED" -> "🍺";
+            case "BATTLE_CUP" -> "🏆";
             default -> lobbyType;
         };
     }
@@ -142,11 +149,26 @@ public abstract class BaseResultFormatter {
     }
 
     protected static String formatDateTime(Long epochSeconds) {
-        return epochSeconds != null ?
-            Instant.ofEpochSecond(epochSeconds)
-                .atZone(ZoneId.systemDefault())
-                .format(DateTimeFormatter.ofPattern("HH:mm"))
-            : "Unknown Time";
+        return formatDateTime(epochSeconds, ZoneId.systemDefault());
+    }
+
+    protected static String formatDateTime(Long epochSeconds, String timezone) {
+        return formatDateTime(epochSeconds, ZoneId.of(timezone));
+    }
+
+    private static String formatDateTime(Long epochSeconds, ZoneId zoneId) {
+        return epochSeconds != null
+                ? Instant.ofEpochSecond(epochSeconds)
+                        .atZone(zoneId)
+                        .format(DateTimeFormatter.ofPattern("HH:mm"))
+                : "Unknown Time";
+    }
+
+    protected static String formatDate(OffsetDateTime dateTime, String timezone, DateTimeFormatter formatter) {
+        return dateTime
+                .atZoneSameInstant(ZoneId.of(timezone))
+                .toLocalDate()
+                .format(formatter);
     }
 
     protected static String formatImp(Integer imp) {

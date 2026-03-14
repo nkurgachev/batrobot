@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import com.batrobot.bot.infrastructure.config.LocaleOverrideProperties;
 import com.batrobot.bot.infrastructure.telegram.formatter.base.BaseResultFormatter;
 import com.batrobot.bot.infrastructure.telegram.formatter.base.TelegramTemplateRenderer;
 import com.batrobot.orchestration.application.dto.response.PlayerNotificationDataResponse.NotificationTarget;
@@ -26,11 +27,12 @@ public class UsernameChangeNotificationFormatter extends BaseResultFormatter {
 
     private static final String MESSAGE_KEY_POLL_QUESTION = "notification.username.poll_question";
 
+    private final LocaleOverrideProperties localeProperties;
     private final MessageSource messageSource;
     private final TelegramTemplateRenderer templateRenderer;
 
     public String formatResult(NotificationTarget target, String oldSteamUsername, String newSteamUsername) {
-        Locale locale = Locale.getDefault();
+        Locale locale = resolveNotificationLocale(localeProperties);
 
         Map<String, Object> model = Map.of(
                 "header", messageSource.getMessage(MESSAGE_KEY_HEADER, null, locale),
@@ -44,7 +46,7 @@ public class UsernameChangeNotificationFormatter extends BaseResultFormatter {
     }
 
     public String formatPollQuestion() {
-        Locale locale = Locale.getDefault();
+        Locale locale = resolveNotificationLocale(localeProperties);
         return messageSource.getMessage(MESSAGE_KEY_POLL_QUESTION, null, locale);
     }
 }

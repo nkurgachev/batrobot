@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import com.batrobot.bot.infrastructure.config.LocaleOverrideProperties;
 import com.batrobot.bot.infrastructure.telegram.formatter.base.BaseResultFormatter;
 import com.batrobot.bot.infrastructure.telegram.formatter.base.TelegramTemplateRenderer;
 import com.batrobot.orchestration.application.dto.response.PlayerNotificationDataResponse.NotificationTarget;
@@ -27,6 +28,7 @@ public class RankChangeNotificationFormatter extends BaseResultFormatter {
     private static final String MESSAGE_KEY_UP_TO = "notification.rank.template.up_to";
     private static final String MESSAGE_KEY_DOWN_TO = "notification.rank.template.down_to";
 
+    private final LocaleOverrideProperties localeProperties;
     private final MessageSource messageSource;
     private final TelegramTemplateRenderer templateRenderer;
 
@@ -39,7 +41,7 @@ public class RankChangeNotificationFormatter extends BaseResultFormatter {
      * @return formatted HTML message
      */
     public String formatResult(NotificationTarget target, SeasonRank oldRank, SeasonRank newRank) {
-        Locale locale = Locale.getDefault();
+        Locale locale = resolveNotificationLocale(localeProperties);
 
         Map<String, Object> model = new HashMap<>();
         model.put("header", messageSource.getMessage(MESSAGE_KEY_HEADER, null, locale));

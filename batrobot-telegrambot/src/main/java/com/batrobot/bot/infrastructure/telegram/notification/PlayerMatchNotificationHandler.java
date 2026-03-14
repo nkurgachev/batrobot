@@ -1,5 +1,9 @@
 package com.batrobot.bot.infrastructure.telegram.notification;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,6 +19,7 @@ import com.batrobot.orchestration.application.dto.response.MatchResultNotificati
 import com.batrobot.orchestration.application.dto.response.MatchResultNotificationDataResponse.MatchNotificationTarget;
 import com.batrobot.orchestration.application.usecase.query.GetMatchResultNotificationDataQuery;
 import com.batrobot.playerstats.domain.event.PlayerMatchStatsCreatedEvent;
+import com.batrobot.shared.application.port.config.AppDayTimeConfig;
 
 /**
  * Event handler for player match results.
@@ -28,6 +33,7 @@ public class PlayerMatchNotificationHandler {
     private final GetMatchResultNotificationDataQuery getMatchResultNotificationDataQuery;
     private final MatchResultNotificationFormatter formatter;
     private final ApplicationEventPublisher eventPublisher;
+    private final AppDayTimeConfig dayTimeConfig;
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
@@ -38,9 +44,15 @@ public class PlayerMatchNotificationHandler {
                 event.heroName(),
                 event.isVictory());
 
-        MatchResultNotificationDataResponse notificationData =
-                getMatchResultNotificationDataQuery.execute(
-                        event.steamId().value(), event.matchId().value());
+        MatchResultNotificationDataResponse notificationData = getMatchResultNotificationDataQuery.execute(
+                event.steamId().value(), event.matchId().value());
+
+        if (!isEndedToday(notificationData.endDateTime())) {
+            log.debug(
+                    "Skipping match result notification for matchId={} because endDateTime={} is not today in timezone {}",
+                    event.matchId().value(), notificationData.endDateTime(), dayTimeConfig.getTimezone());
+            return;
+        }
 
         if (notificationData.targets().isEmpty()) {
             log.debug("No notification targets for steamId={}", event.steamId());
@@ -64,5 +76,19 @@ public class PlayerMatchNotificationHandler {
                     target.telegramChatId(), null, message));
             log.debug("Sent match result notification to chat={}", target.telegramChatId());
         }
+    }
+
+    private boolean isEndedToday(Long endDateTime) {
+        if (endDateTime == null) {
+            return false;
+        }
+
+        ZoneId zoneId = ZoneId.of(dayTimeConfig.getTimezone());
+        LocalDate today = LocalDate.now(zoneId);
+        LocalDate matchEndDate = Instant.ofEpochSecond(endDateTime)
+                .atZone(zoneId)
+                .toLocalDate();
+
+        return matchEndDate.equals(today);
     }
 }

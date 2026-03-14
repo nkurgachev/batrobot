@@ -6,6 +6,7 @@ import com.batrobot.orchestration.application.dto.response.AllPubsTodayCommandRe
 import com.batrobot.orchestration.application.dto.response.AllPubsTodayCommandResponse.UserMatchHistory;
 import com.batrobot.orchestration.application.dto.response.AllPubsTodayCommandResponse.UserMatchHistory.PlayerMatchHistory;
 import com.batrobot.orchestration.application.dto.response.AllPubsTodayCommandResponse.UserMatchHistory.PlayerMatchHistory.MatchStats;
+import com.batrobot.shared.application.port.config.AppDayTimeConfig;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,7 @@ public class AllPubsTodayResultFormatter extends BaseResultFormatter {
 
     private final MessageSource messageSource;
     private final TelegramTemplateRenderer templateRenderer;
+    private final AppDayTimeConfig dayTimeConfig;
 
     /**
      * Formats matches grouped by Telegram user with HTML formatting.
@@ -84,7 +86,7 @@ public class AllPubsTodayResultFormatter extends BaseResultFormatter {
     }
 
     private Map<String, Object> buildMatchModel(MatchStats match) {
-        String matchTime = formatDateTime(match.startDateTime());
+        String matchTime = formatDateTime(match.startDateTime(), dayTimeConfig.getTimezone());
         String matchUrl = STRATZ_MATCH_URL + match.matchId();
         String result = formatResult(match.isVictory());
         String heroName = match.heroName() != null ? match.heroName() : "Unknown";
@@ -93,8 +95,12 @@ public class AllPubsTodayResultFormatter extends BaseResultFormatter {
         int deaths = match.deaths() != null ? match.deaths() : 0;
         int assists = match.assists() != null ? match.assists() : 0;
         String kda = String.format("%d/%d/%d", kills, deaths, assists);
+        String lobbyType = match.lobbyType() != null ? formatLobbyType(match.lobbyType()) : "";
+        String gameMode = match.gameMode() != null ? formatGameMode(match.gameMode()) : "";
 
         Map<String, Object> model = new LinkedHashMap<>();
+        model.put("lobbyType", lobbyType);
+        model.put("gameMode", gameMode);
         model.put("matchTime", matchTime);
         model.put("matchUrl", matchUrl);
         model.put("result", result);

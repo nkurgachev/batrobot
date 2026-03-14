@@ -36,16 +36,16 @@ app:
     timezone: ${DAY_TIMEZONE:Europe/Moscow}
   reputation:
     fixed-reputations:
-      filimonovk: 52
-      nkurgachev: -52
+      #telegramUsername: reputaionValue
 
 telegram:
   bot:
     token: ${TELEGRAM_BOT_TOKEN:}
     username: ${TELEGRAM_BOT_USERNAME:}
   locale:
+    default-locale: ru
     overrides:
-      multi_paska: fi
+      #telegramUsername: languageCode
 
 stratz:
   api:
@@ -56,9 +56,9 @@ ingestion:
   stratz:
     scheduler:
       # Cron для обновления данных. По умолчанию: каждые 5 минут
-      match-update-cron: "0 */3 * * * ?"
+      match-update-cron: ${INGESTION_STRATZ_SCHEDULER_MATCH_UPDATE_CRON:0 */5 * * * ?}
       # Cron для обновления профилей игроков. По умолчанию: каждые 30 мин
-      player-update-cron: "0 */3 * * * ?"
+      player-update-cron: ${INGESTION_STRATZ_SCHEDULER_PLAYER_UPDATE_CRON:0 */30 * * * ?}
     sync:
       # Историческая дата начала загрузки матчей (Unix timestamp в секундах)
       # По умолчанию: 1 января 2026 00:00:00 UTC (1767225600)

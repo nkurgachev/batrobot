@@ -1,15 +1,15 @@
-package com.batrobot.orchestration.application.port.config;
+package com.batrobot.shared.application.port.config;
 
 /**
- * Port interface for day timing configuration.
+ * Shared app day-time configuration contract.
  */
-public interface DayTimeConfig {
-    
+public interface AppDayTimeConfig {
+
     /**
      * Hour when the day starts (0-23).
      */
     int getStartHour();
-    
+
     /**
      * Timezone for day calculations.
      */

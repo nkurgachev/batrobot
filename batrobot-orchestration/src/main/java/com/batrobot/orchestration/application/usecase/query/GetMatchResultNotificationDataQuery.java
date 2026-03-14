@@ -6,6 +6,7 @@ import com.batrobot.match.application.dto.response.MatchResponse;
 import com.batrobot.match.application.usecase.query.GetMatchesByMatchIdsQuery;
 import com.batrobot.orchestration.application.dto.response.MatchResultNotificationDataResponse;
 import com.batrobot.orchestration.application.dto.response.MatchResultNotificationDataResponse.MatchNotificationTarget;
+import com.batrobot.orchestration.application.mapper.OrchestrationResponseMapper;
 import com.batrobot.player.application.dto.response.PlayerResponse;
 import com.batrobot.player.application.usecase.query.GetPlayerBySteamIdQuery;
 import com.batrobot.user.application.dto.response.UserResponse;
@@ -39,6 +40,7 @@ public class GetMatchResultNotificationDataQuery {
     private final GetUsersByTelegramUserIdsQuery getUsersByTelegramUserIdsQuery;
     private final GetPlayerBySteamIdQuery getPlayerBySteamIdQuery;
     private final GetMatchesByMatchIdsQuery getMatchesByMatchIdsQuery;
+    private final OrchestrationResponseMapper responseMapper;
 
     /**
      * Resolves all notification targets for a match result event.
@@ -54,7 +56,7 @@ public class GetMatchResultNotificationDataQuery {
         List<ChatPlayerBindingResponse> bindings = getBindingsForSteamAccountQuery.execute(steamId64);
         if (bindings.isEmpty()) {
             log.debug("No bindings found for Steam account {}, no notifications to send", steamId64);
-            return new MatchResultNotificationDataResponse(matchId, null, List.of());
+            return new MatchResultNotificationDataResponse(matchId, null, null, List.of());
         }
 
         // Step 2: Resolve Steam username
@@ -65,6 +67,9 @@ public class GetMatchResultNotificationDataQuery {
         // Step 3: Resolve match start time
         Map<Long, MatchResponse> matches = getMatchesByMatchIdsQuery.execute(List.of(matchId));
         Long startDateTime = matches.containsKey(matchId) ? matches.get(matchId).startDateTime() : null;
+        Long endDateTime = matches.containsKey(matchId) ? matches.get(matchId).endDateTime() : null;
+        String lobbyType = matches.containsKey(matchId) ? matches.get(matchId).lobbyType() : null;
+        String gameMode = matches.containsKey(matchId) ? matches.get(matchId).gameMode() : null;
 
         // Step 4: Collect unique Telegram user IDs and fetch user info
         List<Long> uniqueUserIds = bindings.stream()
@@ -80,18 +85,17 @@ public class GetMatchResultNotificationDataQuery {
         List<MatchNotificationTarget> targets = bindings.stream()
                 .map(binding -> {
                     UserResponse user = usersById.get(binding.telegramUserId());
-                    return new MatchNotificationTarget(
-                            binding.chatId(),
-                            binding.telegramUserId(),
-                            user != null ? user.username() : null,
-                            user != null ? user.firstName() : null,
-                            user != null ? user.lastName() : null,
-                            steamUsername);
+                    return responseMapper.toMatchNotificationTarget(
+                            binding,
+                            user,
+                            steamUsername,
+                            lobbyType,
+                            gameMode);
                 })
                 .toList();
 
         log.debug("Resolved {} match result notification targets for Steam account {}",
                 targets.size(), steamId64);
-        return new MatchResultNotificationDataResponse(matchId, startDateTime, targets);
+        return new MatchResultNotificationDataResponse(matchId, startDateTime, endDateTime, targets);
     }
 }

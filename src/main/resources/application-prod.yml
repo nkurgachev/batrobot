@@ -5,10 +5,19 @@ spring:
   flyway:
     clean-disabled: true
 
+app:
+  reputation:
+    fixed-reputations:
+      filimonovk: ${APP_REPUTATION_FIXED_REPUTATIONS_FILIMONOVK:52}
+      nkurgachev: ${APP_REPUTATION_FIXED_REPUTATIONS_NKURGACHEV:-52}
+
 telegram:
   bot:
     token: ${TELEGRAM_BOT_TOKEN}
     username: ${TELEGRAM_BOT_USERNAME}
+  locale:
+    overrides:
+      multi_paska: ${TELEGRAM_LOCALE_OVERRIDES_MULTI_PASKA:fi}
 
 stratz:
   api:

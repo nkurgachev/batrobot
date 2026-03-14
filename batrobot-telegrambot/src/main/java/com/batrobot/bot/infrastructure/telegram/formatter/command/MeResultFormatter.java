@@ -11,8 +11,8 @@ import com.batrobot.bot.infrastructure.telegram.formatter.base.TelegramTemplateR
 import com.batrobot.orchestration.application.dto.response.MeCommandResponse;
 import com.batrobot.orchestration.application.dto.response.MeCommandResponse.PlayerRankHistory;
 import com.batrobot.orchestration.application.dto.response.MeCommandResponse.PlayerRankHistory.RankInfo;
+import com.batrobot.shared.application.port.config.AppDayTimeConfig;
 
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.IntStream;
@@ -32,6 +32,7 @@ public class MeResultFormatter extends BaseResultFormatter {
 
     private final MessageSource messageSource;
     private final TelegramTemplateRenderer templateRenderer;
+    private final AppDayTimeConfig dayTimeConfig;
 
     /**
      * Formats list of user's Steam accounts into a user-friendly message
@@ -94,7 +95,7 @@ public class MeResultFormatter extends BaseResultFormatter {
             }
         }
 
-        String date = current.assignedAt().atZoneSameInstant(ZoneOffset.UTC).toLocalDate().format(ISO_DATE);
+        String date = formatDate(current.assignedAt(), dayTimeConfig.getTimezone(), ISO_DATE);
         String medal = formatRankAsMedal(current.seasonRank(), messageSource, locale);
 
         return Map.of(
