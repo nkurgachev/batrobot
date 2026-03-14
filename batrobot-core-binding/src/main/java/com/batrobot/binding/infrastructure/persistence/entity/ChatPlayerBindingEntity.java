@@ -11,10 +11,16 @@ import java.util.UUID;
 @Entity
 @Table(
     name = "chat_player_bindings",
-    uniqueConstraints = @UniqueConstraint(
-        name = "uk_chat_user_player",
-        columnNames = {"telegram_chat_id", "telegram_user_id", "steam_id"}
-    ),
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "uk_chat_user_player",
+            columnNames = {"telegram_chat_id", "telegram_user_id", "steam_id"}
+        ),
+        @UniqueConstraint(
+            name = "uk_chat_steam",
+            columnNames = {"telegram_chat_id", "steam_id"}
+        )
+    },
     indexes = {
         @Index(name = "idx_csb_chat_user", columnList = "telegram_chat_id, telegram_user_id"),
         @Index(name = "idx_csb_steam", columnList = "steam_id")

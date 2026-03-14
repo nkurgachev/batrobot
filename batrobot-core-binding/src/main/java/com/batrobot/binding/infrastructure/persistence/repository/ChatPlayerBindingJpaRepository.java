@@ -29,6 +29,16 @@ public interface ChatPlayerBindingJpaRepository extends JpaRepository<ChatPlayer
             @Param("chatId") Long chatId,
             @Param("userId") Long userId,
             @Param("steamId") Long steamId);
+
+    /**
+     * Finds a binding by chat and steam account IDs.
+     */
+    @Query("SELECT cpb FROM ChatPlayerBindingEntity cpb " +
+          "WHERE cpb.telegramChatId = :chatId " +
+          "AND cpb.steamId = :steamId")
+    Optional<ChatPlayerBindingEntity> findBindingInChatBySteamId(
+           @Param("chatId") Long chatId,
+           @Param("steamId") Long steamId);
     
     /**
      * Checks if a binding exists without loading the entity.

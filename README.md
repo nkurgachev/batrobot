@@ -83,31 +83,19 @@ docker login
 3. Соберите и опубликуйте образ:
 
 ```bash
-docker build -t your-dockerhub-username/batrobot:latest .
-docker push your-dockerhub-username/batrobot:latest
+docker build -t ndkurgachev/batrobot:latest .
+docker push ndkurgachev/batrobot:latest
 ```
 
 Для тегирования конкретной версии:
 
 ```bash
-docker build -t your-dockerhub-username/batrobot:1.0.0 .
-docker push your-dockerhub-username/batrobot:1.0.0
+docker build -t ndkurgachev/batrobot:1.0.0 .
+docker push ndkurgachev/batrobot:1.0.0
 # Обновить latest отдельно, если нужно
-docker tag your-dockerhub-username/batrobot:1.0.0 your-dockerhub-username/batrobot:latest
-docker push your-dockerhub-username/batrobot:latest
+docker tag yndkurgachev/batrobot:1.0.0 ndkurgachev/batrobot:latest
+docker push ndkurgachev/batrobot:latest
 ```
-
-### GitHub Container Registry (альтернатива)
-
-```bash
-# Авторизация — нужен PAT с правом write:packages
-echo YOUR_PAT | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
-
-docker build -t ghcr.io/your-github-username/batrobot:latest .
-docker push ghcr.io/your-github-username/batrobot:latest
-```
-
-Чтобы образ был публично доступен, откройте его настройки в разделе **Packages → Change visibility → Public**.
 
 ## Развертывание проекта
 
@@ -120,31 +108,7 @@ cd batrobot
 
 ### 2. Создать файл `.env`
 
-В корне проекта создайте `.env`:
-
-```dotenv
-BATROBOT_IMAGE=your-dockerhub-username/batrobot:latest
-
-SPRING_PROFILES_ACTIVE=prod
-
-TELEGRAM_BOT_TOKEN=your_telegram_bot_token
-TELEGRAM_BOT_USERNAME=your_bot_username
-STRATZ_API_TOKEN=your_stratz_api_token
-STEAM_API_TOKEN=your_steam_api_token
-
-DAY_START_HOUR=3
-DAY_TIMEZONE=Europe/Moscow
-INGESTION_STRATZ_HISTORICAL_START=1767225600
-INGESTION_STRATZ_MATCHES_LIMIT=20
-
-JAVA_OPTS=-XX:MaxRAMPercentage=50.0 -XX:InitialRAMPercentage=10.0 -Dfile.encoding=UTF-8
-```
-
-Для VPS с ограниченными ресурсами лучше начать с более консервативного `JAVA_OPTS`, чем desktop-дефолт. Если на сервере 1 GB RAM, можно попробовать:
-
-```dotenv
-JAVA_OPTS=-XX:MaxRAMPercentage=50.0 -XX:InitialRAMPercentage=10.0 -Dfile.encoding=UTF-8
-```
+В корне проекта создайте `.env`
 
 ### 3. Подготовить директорию с данными
 
@@ -218,8 +182,8 @@ docker compose logs -f batrobot
 ### 1. Собрать и опубликовать новый образ (локально)
 
 ```bash
-docker build -t your-dockerhub-username/batrobot:latest .
-docker push your-dockerhub-username/batrobot:latest
+docker build -t ndkurgachev/batrobot:latest .
+docker push ndkurgachev/batrobot:latest
 ```
 
 ### 2. Забрать версию compose-файла на VPS

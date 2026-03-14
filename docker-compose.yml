@@ -1,9 +1,25 @@
 services:
+  fix-permissions:
+    image: alpine:3.20
+    container_name: batrobot-fix-permissions
+    user: "0:0"
+    command: >
+      sh -lc "mkdir -p /app/data &&
+              chown -R 1000:1000 /app/data &&
+              find /app/data -type d -exec chmod 775 {} \; &&
+              find /app/data -type f -exec chmod 664 {} \;"
+    volumes:
+      - ./data:/app/data
+    restart: "no"
+
   batrobot:
     image: ${BATROBOT_IMAGE}
     container_name: batrobot
     init: true
     restart: unless-stopped
+    depends_on:
+      fix-permissions:
+        condition: service_completed_successfully
     env_file:
       - .env
     environment:

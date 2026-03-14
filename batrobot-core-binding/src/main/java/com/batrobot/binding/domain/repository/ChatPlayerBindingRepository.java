@@ -23,6 +23,14 @@ public interface ChatPlayerBindingRepository extends Repository<ChatPlayerBindin
             TelegramUserId userId,
             SteamId steamId
     );
+
+    /**
+     * Finds a binding for a specific Steam account in a specific chat.
+     */
+    Optional<ChatPlayerBinding> findBindingInChatBySteamId(
+            TelegramChatId chatId,
+            SteamId steamId
+    );
     
     /**
      * Finds all bindings for a specific user in a chat.

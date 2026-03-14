@@ -13,6 +13,7 @@ import com.batrobot.orchestration.application.exception.OrchestrationNoAccountsE
 import com.batrobot.orchestration.application.exception.OrchestrationRepsNoParticipantsException;
 import com.batrobot.orchestration.application.mapper.OrchestrationResponseMapper;
 import com.batrobot.orchestration.application.port.config.ReputationConfig;
+import com.batrobot.orchestration.infrastructure.config.ReputationConfigAdapter;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -93,7 +94,8 @@ public class GetChatUsersReputationQuery {
     }
 
     private int resolveReputation(String username) {
-        Integer fixed = reputationConfig.getFixedReputations().get(username);
+        String normalizedUsername = ReputationConfigAdapter.normalizeUsername(username);
+        Integer fixed = reputationConfig.getFixedReputations().get(normalizedUsername);
         if (fixed != null) {
             return fixed;
         }

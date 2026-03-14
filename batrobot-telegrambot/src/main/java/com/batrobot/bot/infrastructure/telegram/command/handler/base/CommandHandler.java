@@ -2,6 +2,7 @@ package com.batrobot.bot.infrastructure.telegram.command.handler.base;
 
 import java.util.Map;
 
+import com.batrobot.bot.infrastructure.config.LocaleOverrideProperties;
 import com.batrobot.bot.infrastructure.telegram.command.dto.CommandEnvelope;
 
 /**
@@ -19,8 +20,9 @@ public interface CommandHandler {
      */
     default String resolveLanguageCode(CommandEnvelope envelope, Map<String, String> overrides) {
         String username = envelope.payload().user().username();
-        if (username != null && overrides != null && overrides.containsKey(username)) {
-            return overrides.get(username);
+        String normalizedUsername = LocaleOverrideProperties.normalizeUsername(username);
+        if (overrides != null && overrides.containsKey(normalizedUsername)) {
+            return overrides.get(normalizedUsername);
         }
         return envelope.metadata().languageCode();
     }

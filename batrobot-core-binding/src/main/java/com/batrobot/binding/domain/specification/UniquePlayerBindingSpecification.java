@@ -12,8 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
 /**
- * Specification for ensuring that a player (identified by Telegram user ID and
- * Steam ID) is not already bound to a chat.
+ * Specification for ensuring that a Steam account is unique within a chat.
  */
 @RequiredArgsConstructor
 public class UniquePlayerBindingSpecification implements
@@ -36,14 +35,16 @@ public class UniquePlayerBindingSpecification implements
     @Override
     public boolean isSatisfiedBy(BindingContext context) {
         return bindingRepository
-                .findBindingForUser(context.getTelegramChatId(), context.getTelegramUserId(), context.getSteamId())
+                .findBindingInChatBySteamId(context.getTelegramChatId(), context.getSteamId())
                 .isEmpty();
     }
 
     @Override
     public void check(BindingContext context) {
-        if (!isSatisfiedBy(context)) {
-            throw new PlayerAlreadyBoundException(context.getTelegramUserId());
-        }
+        bindingRepository
+                .findBindingInChatBySteamId(context.getTelegramChatId(), context.getSteamId())
+                .ifPresent(binding -> {
+                    throw new PlayerAlreadyBoundException(binding.getUserId());
+                });
     }
 }

@@ -23,39 +23,46 @@ import java.util.stream.Collectors;
  */
 @Repository
 @RequiredArgsConstructor
-public class ChatPlayerBindingJpaRepositoryAdapter extends RepositoryAdapter<ChatPlayerBinding, ChatPlayerBindingEntity, UUID>
+public class ChatPlayerBindingJpaRepositoryAdapter
+        extends RepositoryAdapter<ChatPlayerBinding, ChatPlayerBindingEntity, UUID>
         implements ChatPlayerBindingRepository {
-    
+
     private final ChatPlayerBindingJpaRepository jpaRepository;
     private final ChatPlayerBindingEntityMapper mapper;
-    
+
     @Override
     public Optional<ChatPlayerBinding> findById(UUID id) {
         return jpaRepository.findById(id)
                 .map(mapper::toDomain);
     }
-    
+
     @Override
     public Optional<ChatPlayerBinding> findBindingForUser(
             TelegramChatId chatId,
             TelegramUserId userId,
-            SteamId steamId
-    ) {
+            SteamId steamId) {
         return jpaRepository.findBinding(chatId.value(), userId.value(), steamId.value())
                 .map(mapper::toDomain);
     }
-    
+
+    @Override
+    public Optional<ChatPlayerBinding> findBindingInChatBySteamId(
+            TelegramChatId chatId,
+            SteamId steamId) {
+        return jpaRepository.findBindingInChatBySteamId(chatId.value(), steamId.value())
+                .map(mapper::toDomain);
+    }
+
     @Override
     public List<ChatPlayerBinding> findBindingsForUserInChat(
             TelegramChatId chatId,
-            TelegramUserId userId
-    ) {
+            TelegramUserId userId) {
         return jpaRepository.findUserBindingsInChat(chatId.value(), userId.value())
                 .stream()
                 .map(mapper::toDomain)
                 .collect(Collectors.toList());
     }
-    
+
     @Override
     public List<ChatPlayerBinding> findBindingsInChat(TelegramChatId chatId) {
         return jpaRepository.findBindingsInChat(chatId.value())
@@ -63,7 +70,7 @@ public class ChatPlayerBindingJpaRepositoryAdapter extends RepositoryAdapter<Cha
                 .map(mapper::toDomain)
                 .collect(Collectors.toList());
     }
-    
+
     @Override
     public List<ChatPlayerBinding> findBindingsForSteamAccount(SteamId steamId) {
         return jpaRepository.findBindingsForSteamAccount(steamId.value())
@@ -71,23 +78,22 @@ public class ChatPlayerBindingJpaRepositoryAdapter extends RepositoryAdapter<Cha
                 .map(mapper::toDomain)
                 .collect(Collectors.toList());
     }
-    
+
     @Override
     public Optional<ChatPlayerBinding> findPrimaryBindingForUserInChat(
             TelegramChatId chatId,
-            TelegramUserId userId
-    ) {
+            TelegramUserId userId) {
         return jpaRepository.findPrimaryBinding(chatId.value(), userId.value())
                 .map(mapper::toDomain);
     }
-    
+
     @Override
     public ChatPlayerBinding save(ChatPlayerBinding binding) {
         ChatPlayerBindingEntity entity = mapper.toEntity(binding);
         ChatPlayerBindingEntity saved = jpaRepository.save(entity);
         return mapper.toDomain(saved);
     }
-    
+
     @Override
     public void deleteById(UUID id) {
         validateExists(id);
@@ -122,8 +128,7 @@ public class ChatPlayerBindingJpaRepositoryAdapter extends RepositoryAdapter<Cha
     @Override
     public List<ChatPlayerBinding> findAllById(Collection<UUID> ids) {
         return jpaRepository.findAllById(ids).stream()
-            .map(mapper::toDomain)
-            .toList();
+                .map(mapper::toDomain)
+                .toList();
     }
 }
-
