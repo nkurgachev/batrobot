@@ -39,15 +39,15 @@
 {{/heroes}}
 
 ┌ <b>{{{labels.achievements}}}</b>
-{{#mvpCount}}
+{{#showMvpCount}}
 ├ {{{labels.mvp}}} <code>{{mvpCount}}</code>
-{{/mvpCount}}
-{{#topCoreCount}}
+{{/showMvpCount}}
+{{#showTopCoreCount}}
 ├ {{{labels.topCore}}} <code>{{topCoreCount}}</code>
-{{/topCoreCount}}
-{{#topSupportCount}}
+{{/showTopCoreCount}}
+{{#showTopSupportCount}}
 ├ {{{labels.topSupport}}} <code>{{topSupportCount}}</code>
-{{/topSupportCount}}
+{{/showTopSupportCount}}
 {{#totalImp}}
 └ {{{labels.imp}}} <code>{{totalImp}}</code>
 {{/totalImp}}

@@ -119,8 +119,14 @@ public class StatsPeriodResultFormatter extends BaseResultFormatter {
                 .map(this::buildHeroModel)
                 .toList()));
 
+        model.put("showMvpCount", account.achievementStats().mvpCount() != null
+                && account.achievementStats().mvpCount() > 0);
         model.put("mvpCount", account.achievementStats().mvpCount());
+        model.put("showTopCoreCount", account.achievementStats().topCoreCount() != null
+                && account.achievementStats().topCoreCount() > 0);
         model.put("topCoreCount", account.achievementStats().topCoreCount());
+        model.put("showTopSupportCount", account.achievementStats().topSupportCount() != null
+                && account.achievementStats().topSupportCount() > 0);
         model.put("topSupportCount", account.achievementStats().topSupportCount());
         model.put("totalImp", formatImp(account.achievementStats().totalImp()));
 
