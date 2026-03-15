@@ -114,6 +114,11 @@ public class InboundMessageEventHandler {
     }
 
     private void handleNonCommand(Message message) {
-        // TODO: Implement non-command message handling if needed
+        // TODO: delete after testing
+        log.info("Received non-command message from user {}: {} {} (ID: {})",
+                message.from().username(),
+                message.from().firstName(),
+                message.from().lastName(),
+                message.from().id());
     }
 }
