@@ -85,9 +85,11 @@ resilience4j:
       # ===================== Stratz API =====================
       stratz-api:
         # Stratz API limits: 20 RPS, 250 RPM, 2000 RPH, 10000 RPD
-        # Setting conservative limit: 6 requests per minute (10 seconds per request)
-        limitForPeriod: 6
-        limitRefreshPeriod: 60s
-        timeoutDuration: 0
+        # Max safe default for this app mode: 34 requests per 5 minutes.
+        # 34 * 288 runs/day = 9792 requests/day (< 10000 RPD).
+        # Can be overridden via env without rebuilding image.
+        limitForPeriod: ${STRATZ_RATELIMITER_LIMIT_FOR_PERIOD:34}
+        limitRefreshPeriod: ${STRATZ_RATELIMITER_LIMIT_REFRESH_PERIOD:300s}
+        timeoutDuration: ${STRATZ_RATELIMITER_TIMEOUT_DURATION:5s}
         registerHealthIndicator: true
         eventConsumerBufferSize: 10
