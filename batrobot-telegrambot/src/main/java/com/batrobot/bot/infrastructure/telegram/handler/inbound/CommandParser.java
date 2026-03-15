@@ -19,9 +19,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommandParser {
 
-    private static final String COMMAND_REGEX_TEMPLATE = "^/([a-zA-Z0-9_]+)(?:@%s)?\\s*(.*)$";
+    private static final Pattern COMMAND_PATTERN = Pattern.compile(
+        "^/([a-zA-Z0-9_]+)(?:@([a-zA-Z0-9_]+))?\\s*(.*)$",
+        Pattern.CASE_INSENSITIVE
+    );
     private static final int COMMAND_NAME_GROUP = 1;
-    private static final int COMMAND_ARGS_GROUP = 2;
+    private static final int COMMAND_BOT_USERNAME_GROUP = 2;
+    private static final int COMMAND_ARGS_GROUP = 3;
     private static final String ARGUMENTS_SPLIT_REGEX = "\\s+";
 
     private final InboundMappper inboundMapper;
@@ -33,10 +37,14 @@ public class CommandParser {
         }
 
         String messageText = rawText.trim();
-        Pattern pattern = buildCommandPattern(botUsername);
-        Matcher matcher = pattern.matcher(messageText);
+        Matcher matcher = COMMAND_PATTERN.matcher(messageText);
 
         if (!matcher.matches()) {
+            return Optional.empty();
+        }
+
+        String addressedBotUsername = matcher.group(COMMAND_BOT_USERNAME_GROUP);
+        if (addressedBotUsername != null && !addressedBotUsername.equalsIgnoreCase(botUsername)) {
             return Optional.empty();
         }
 
@@ -60,11 +68,5 @@ public class CommandParser {
         );
 
         return Optional.of(envelope);
-    }
-
-    private Pattern buildCommandPattern(String botUsername) {
-        String escapedBotUsername = Pattern.quote(botUsername);
-        String regex = String.format(COMMAND_REGEX_TEMPLATE, escapedBotUsername);
-        return Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
     }
 }

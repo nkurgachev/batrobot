@@ -72,10 +72,7 @@ public class InboundMessageEventHandler {
                                 sendUnexpectedError(envelope, "common.exception.unexpected_error", e);
                             }
                         },
-                        () -> {
-                            log.warn("Unknown command: {}", envelope.payload().command().name());
-                            sendFallbackMessage(envelope);
-                        });
+                        () -> log.debug("Ignoring unsupported command: {}", envelope.payload().command().name()));
     }
 
     private void sendMessage(CommandEnvelope envelope, String text) {
@@ -84,15 +81,6 @@ public class InboundMessageEventHandler {
                 envelope.metadata().messageId(),
                 text);
         eventPublisher.publishEvent(response);
-    }
-
-    private void sendFallbackMessage(CommandEnvelope envelope) {
-        Locale locale = getLocale(envelope.metadata().languageCode());
-        String text = messageSource.getMessage(
-                "common.exception.unknown_command",
-                null,
-                locale);
-        sendMessage(envelope, text);
     }
 
     private void sendExpectedError(CommandEnvelope envelope, String messageKey, Object[] args,
