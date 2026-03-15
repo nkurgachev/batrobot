@@ -33,6 +33,8 @@ import java.util.List;
 @Validated
 public class SyncPlayerMatches {
 
+    private static final long MATCH_REPROCESS_WINDOW_SECONDS = 24 * 60 * 60;
+
     private final GetMatchesForPlayerQuery getMatchesForPlayer;
     private final UpsertMatch upsertMatch;
     private final UpsertPlayerMatchStats upsertPlayerMatchStats;
@@ -57,6 +59,7 @@ public class SyncPlayerMatches {
                 .map(matchId -> getMatchesByMatchIdsQuery.execute(List.of(matchId)))
                 .flatMap(matches -> matches.values().stream().findFirst())
                 .map(MatchResponse::endDateTime)
+                .map(this::applyReprocessWindow)
                 .orElse(stratzSyncConfig.getHistoricalStartTimestamp());
 
         log.debug("Player {}: startTime={}, take={}", steamId64, startTime, take);
@@ -94,6 +97,12 @@ public class SyncPlayerMatches {
             upsertPlayerMatchStats.execute(statsRequest);
         }
     }
+
+    private long applyReprocessWindow(Long latestMatchEndDateTime) {
+        if (latestMatchEndDateTime == null) {
+            return stratzSyncConfig.getHistoricalStartTimestamp();
+        }
+
+        return Math.max(0L, latestMatchEndDateTime - MATCH_REPROCESS_WINDOW_SECONDS);
+    }
 }
-
-
