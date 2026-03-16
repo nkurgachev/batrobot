@@ -312,3 +312,19 @@ docker compose restart batrobot
 - переход с H2 на PostgreSQL для более предсказуемой прод-эксплуатации
 - systemd unit для автоматического `docker compose up` после reboot
 - внешний reverse proxy, если появится HTTP API для внешних клиентов
+
+## Hot release
+### Local
+```bash
+docker build -t ndkurgachev/batrobot:latest .
+docker push ndkurgachev/batrobot:latest
+```
+
+### VPS
+```bash
+git pull
+docker compose pull
+docker compose up -d
+docker image prune -f
+docker compose logs -f batrobot
+```

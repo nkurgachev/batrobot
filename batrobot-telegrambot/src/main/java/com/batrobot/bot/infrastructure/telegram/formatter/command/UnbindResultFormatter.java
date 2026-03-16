@@ -18,7 +18,7 @@ import java.util.Locale;
 @RequiredArgsConstructor
 public class UnbindResultFormatter extends BaseResultFormatter {
 
-    private final static String MESSAGE_KEY_UNBIND_SUCCESS = "unbind.success.binding_removed";
+    private final static String MESSAGE_KEY_UNBIND_SUCCESS = "unbind.success.binding_deleted";
     private final MessageSource messageSource;
 
     /**
