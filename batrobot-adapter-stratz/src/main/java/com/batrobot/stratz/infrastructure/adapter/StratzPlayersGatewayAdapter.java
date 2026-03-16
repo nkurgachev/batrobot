@@ -35,6 +35,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class StratzPlayersGatewayAdapter implements StratzPlayersGatewayPort {
 
+    private static final int MAX_PLAYERS_PER_REQUEST = 5;
+
     private final StratzQueryExecutor stratzQueryExecutor;
 
     private final ObjectMapper objectMapper;
@@ -58,7 +60,22 @@ public class StratzPlayersGatewayAdapter implements StratzPlayersGatewayPort {
         List<SteamId> steamIdObjects = steamIds64.stream()
                 .map(SteamId::fromSteamId64)
                 .toList();
-        return fetchPlayersFromStratzBatch(steamIdObjects);
+
+        List<StratzPlayerResponse> allResults = new ArrayList<>();
+
+        for (int fromIndex = 0; fromIndex < steamIdObjects.size(); fromIndex += MAX_PLAYERS_PER_REQUEST) {
+            int toIndex = Math.min(fromIndex + MAX_PLAYERS_PER_REQUEST, steamIdObjects.size());
+            List<SteamId> batch = steamIdObjects.subList(fromIndex, toIndex);
+
+            log.debug("Fetching Stratz players batch {}/{} (size={})",
+                fromIndex / MAX_PLAYERS_PER_REQUEST + 1,
+                (steamIdObjects.size() + MAX_PLAYERS_PER_REQUEST - 1) / MAX_PLAYERS_PER_REQUEST,
+                batch.size());
+
+            allResults.addAll(fetchPlayersFromStratzBatch(batch));
+        }
+
+        return allResults;
     }
 
     /**
