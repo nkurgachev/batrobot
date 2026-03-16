@@ -2,6 +2,9 @@ package com.batrobot.bot.infrastructure.telegram.command.mapper;
 
 import com.batrobot.bot.infrastructure.telegram.command.exception.TelegramCommandInputException;
 
+import java.text.BreakIterator;
+import java.util.Locale;
+
 /**
  * Shared helper for emoji argument parsing from telegram command arguments.
  */
@@ -9,8 +12,6 @@ public interface EmojiArgumentMapperSupport {
 
     String MESSAGE_KEY_NO_EMOJI = "common.exception.no_emoji";
     String MESSAGE_KEY_INVALID_EMOJI = "common.exception.invalid_emoji";
-    int MAX_EMOJI_CODE_POINTS = 8;
-
     default String parseEmoji(String[] args) {
         if (args == null || args.length == 0 || args[0] == null || args[0].isBlank()) {
             throw new TelegramCommandInputException(MESSAGE_KEY_NO_EMOJI);
@@ -18,12 +19,28 @@ public interface EmojiArgumentMapperSupport {
 
         String emoji = args[0].trim();
 
-        int codePoints = emoji.codePointCount(0, emoji.length());
-        if (codePoints > MAX_EMOJI_CODE_POINTS || emoji.chars().anyMatch(Character::isWhitespace) || !looksLikeEmoji(emoji)) {
+        if (emoji.chars().anyMatch(Character::isWhitespace)
+                || countGraphemeClusters(emoji) != 1
+                || !looksLikeEmoji(emoji)) {
             throw new TelegramCommandInputException(MESSAGE_KEY_INVALID_EMOJI, emoji);
         }
 
         return emoji;
+    }
+
+    private static int countGraphemeClusters(String value) {
+        BreakIterator iterator = BreakIterator.getCharacterInstance(Locale.ROOT);
+        iterator.setText(value);
+
+        int count = 0;
+        int start = iterator.first();
+        for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator.next()) {
+            if (start < end) {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     private static boolean looksLikeEmoji(String value) {
