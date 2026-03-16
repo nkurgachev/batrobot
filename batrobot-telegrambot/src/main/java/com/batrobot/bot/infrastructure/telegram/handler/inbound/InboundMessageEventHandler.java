@@ -5,10 +5,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 
+import com.batrobot.bot.infrastructure.config.LocaleOverrideProperties;
 import com.batrobot.bot.infrastructure.telegram.command.dto.CommandEnvelope;
 import com.batrobot.bot.infrastructure.telegram.command.exception.TelegramCommandInputException;
 import com.batrobot.bot.infrastructure.telegram.event.inbound.InboundMessageReceivedEvent;
 import com.batrobot.bot.infrastructure.telegram.event.outbound.OutboundMessageRequestedEvent;
+import com.batrobot.bot.infrastructure.telegram.notification.DailyChatMessageStatsTracker;
 import com.batrobot.orchestration.application.exception.base.OrchestrationCommandException;
 import com.batrobot.shared.application.exception.ApplicationException;
 import com.batrobot.shared.domain.exception.DomainException;
@@ -35,6 +37,8 @@ public class InboundMessageEventHandler {
 
     private final CommandHandlerFactory handlerFactory;
     private final CommandParser commandParser;
+    private final DailyChatMessageStatsTracker dailyChatMessageStatsTracker;
+    private final LocaleOverrideProperties localeOverrides;
 
     private final MessageSource messageSource;
 
@@ -109,16 +113,35 @@ public class InboundMessageEventHandler {
 
     private Locale getLocale(String languageCode) {
         return Optional.ofNullable(languageCode)
+                .filter(code -> !code.isBlank())
                 .map(Locale::forLanguageTag)
-                .orElse(Locale.getDefault());
+                .orElse(localeOverrides.notificationLocale());
     }
 
     private void handleNonCommand(Message message) {
-        // TODO: delete after testing
-        log.info("Received non-command message from user {}: {} {} (ID: {})",
-                message.from().username(),
-                message.from().firstName(),
-                message.from().lastName(),
-                message.from().id());
+        if (message == null || message.text() == null || message.text().isBlank()) {
+            return;
+        }
+
+        if (message.chat() == null || message.from() == null) {
+            log.debug("Skipping non-command message without chat or user context");
+            return;
+        }
+
+        String username = message.from().username();
+        if (username.isBlank()) {
+            log.debug("Skipping non-command message from user without telegram username: userId={}", message.from().id());
+            return;
+        }
+
+        String languageCode = resolveLanguageCode(username, message.from().languageCode());
+        dailyChatMessageStatsTracker.increment(message.chat().id(), username, languageCode);
+    }
+
+    private String resolveLanguageCode(String username, String fallbackLanguageCode) {
+        if (localeOverrides.getOverrides().containsKey(username)) {
+            return localeOverrides.getOverrides().get(username);
+        }
+        return fallbackLanguageCode;
     }
 }

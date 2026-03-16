@@ -46,6 +46,9 @@ telegram:
     default-locale: ru
     overrides:
       '[telegramUsername]': languageCode
+  notification:
+    scheduler:
+      daily-message-stats-cron: ${TELEGRAM_NOTIFICATION_SCHEDULER_DAILY_MESSAGE_STATS_CRON:0 0 0 * * *}
 
 stratz:
   api:

@@ -110,7 +110,6 @@ public abstract class BaseResultFormatter {
             case "MVP" -> "💜";
             case "TOP_CORE" -> "❤️";
             case "TOP_SUPPORT" -> "🩵";
-            case "BEST_PLAY" -> "💛"; //TODO: проверить по БД
             default -> award;
         };
     }

@@ -19,6 +19,11 @@
     "type": "java.util.Map<java.lang.String, java.lang.String>",
     "description": "Map of locale overrides for specific users, where key is the user's identifier and value is the locale to be used for that user."
   },
+  {
+    "name": "telegram.notification.scheduler.daily-message-stats-cron",
+    "type": "java.lang.String",
+    "description": "Cron for scheduling daily Telegram notifications with per-chat non-command message statistics."
+  },
 
   {
     "name": "stratz.api.token",

@@ -29,21 +29,10 @@ public class LocaleOverrideProperties {
 
         this.overrides = overrides.entrySet().stream()
                 .collect(Collectors.toMap(
-                        entry -> normalizeUsername(entry.getKey()),
+                        entry -> entry.getKey().trim().toLowerCase(),
                         Map.Entry::getValue,
                         (left, right) -> right,
                         LinkedHashMap::new));
-    }
-
-    public static String normalizeUsername(String username) {
-        if (username == null) {
-            return "";
-        }
-        String normalized = username.trim();
-        if (normalized.startsWith("@")) {
-            normalized = normalized.substring(1);
-        }
-        return normalized.toLowerCase();
     }
 
     public Locale notificationLocale() {
