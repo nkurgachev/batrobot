@@ -25,13 +25,9 @@ dependencyManagement {
 
 dependencies {
     implementation project(':batrobot-orchestration')
-    implementation project(':batrobot-adapter-steam')
-    implementation project(':batrobot-core-binding')
-    implementation project(':batrobot-core-chat')
-    implementation project(':batrobot-core-user')
+    implementation project(':batrobot-shared')
     implementation project(':batrobot-core-player')
     implementation project(':batrobot-core-playerstats')
-    implementation project(':batrobot-shared')
 
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-validation'

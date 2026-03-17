@@ -323,7 +323,7 @@ public class Player extends BaseAggregateRoot {
     /**
      * Updates Dota Plus subscription status.
      */
-    public boolean updateIsDotaPlusSubscriber(boolean newIsDotaPlusSubscriber) {
+    public boolean updateIsDotaPlusSubscriber(Boolean newIsDotaPlusSubscriber) {
 
         boolean changed = false;
 
