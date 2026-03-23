@@ -1,6 +1,6 @@
 package com.batrobot.ingestion.application.usecase.command;
 
-import com.batrobot.player.application.usecase.query.GetAllPlayerSteamIdsQuery;
+import com.batrobot.binding.application.usecase.query.GetBoundPlayerSteamIdsQuery;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.util.List;
 @Validated
 public class SyncAllPlayersMatches {
 
-    private final GetAllPlayerSteamIdsQuery getAllPlayerSteamIdsQuery;
+    private final GetBoundPlayerSteamIdsQuery getBoundPlayerSteamIdsQuery;
     private final SyncPlayerMatches syncPlayerMatches;
 
     /**
@@ -29,10 +29,10 @@ public class SyncAllPlayersMatches {
     public void execute() {
         log.info("Starting matches sync for all players");
 
-        List<Long> steamIds = getAllPlayerSteamIdsQuery.execute();
+        List<Long> steamIds = getBoundPlayerSteamIdsQuery.execute();
 
         if (steamIds.isEmpty()) {
-            log.info("No players found for update");
+            log.info("No bound players found for matches sync");
             return;
         }
 

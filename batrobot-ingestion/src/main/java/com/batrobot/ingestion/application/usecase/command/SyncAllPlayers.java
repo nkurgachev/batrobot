@@ -5,7 +5,8 @@ import com.batrobot.stratz.application.usecase.query.GetPlayersFromStratzQuery;
 
 import com.batrobot.player.application.dto.request.PlayerRequest;
 import com.batrobot.player.application.usecase.command.UpsertPlayer;
-import com.batrobot.player.application.usecase.query.GetAllPlayerSteamIdsQuery;
+
+import com.batrobot.binding.application.usecase.query.GetBoundPlayerSteamIdsQuery;
 
 import com.batrobot.ingestion.application.mapper.IngestionRequestMapper;
 
@@ -26,7 +27,7 @@ import java.util.List;
 @Validated
 public class SyncAllPlayers {
 
-    private final GetAllPlayerSteamIdsQuery getAllPlayerSteamIdsQuery;
+    private final GetBoundPlayerSteamIdsQuery getBoundPlayerSteamIdsQuery;
     private final GetPlayersFromStratzQuery getPlayersFromStratzQuery;
     private final UpsertPlayer upsertPlayer;
     private final IngestionRequestMapper requestMapper;
@@ -37,9 +38,9 @@ public class SyncAllPlayers {
     public void execute() {
         log.info("Starting player profiles sync for all players");
 
-        List<Long> steamIds = getAllPlayerSteamIdsQuery.execute();
+        List<Long> steamIds = getBoundPlayerSteamIdsQuery.execute();
         if (steamIds.isEmpty()) {
-            log.info("No players found for profile sync");
+            log.info("No bound players found for profile sync");
             return;
         }
 

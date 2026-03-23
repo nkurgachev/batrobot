@@ -57,5 +57,10 @@ public interface ChatPlayerBindingRepository extends Repository<ChatPlayerBindin
             TelegramChatId chatId,
             TelegramUserId userId
     );
+
+    /**
+     * Returns all distinct Steam IDs that have at least one binding.
+     */
+    List<Long> findAllBoundSteamIds();
 }
 

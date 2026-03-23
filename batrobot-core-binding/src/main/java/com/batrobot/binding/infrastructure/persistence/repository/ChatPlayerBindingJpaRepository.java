@@ -86,5 +86,11 @@ public interface ChatPlayerBindingJpaRepository extends JpaRepository<ChatPlayer
     Optional<ChatPlayerBindingEntity> findPrimaryBinding(
             @Param("chatId") Long chatId,
             @Param("userId") Long userId);
+
+    /**
+     * Returns all distinct Steam IDs that have at least one binding.
+     */
+    @Query("SELECT DISTINCT cpb.steamId FROM ChatPlayerBindingEntity cpb")
+    List<Long> findAllBoundSteamIds();
 }
 

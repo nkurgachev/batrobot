@@ -88,6 +88,11 @@ public class ChatPlayerBindingJpaRepositoryAdapter
     }
 
     @Override
+    public List<Long> findAllBoundSteamIds() {
+        return jpaRepository.findAllBoundSteamIds();
+    }
+
+    @Override
     public ChatPlayerBinding save(ChatPlayerBinding binding) {
         ChatPlayerBindingEntity entity = mapper.toEntity(binding);
         ChatPlayerBindingEntity saved = jpaRepository.save(entity);
