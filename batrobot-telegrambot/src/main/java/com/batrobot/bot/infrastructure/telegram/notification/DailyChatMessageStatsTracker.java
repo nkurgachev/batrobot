@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,22 @@ public class DailyChatMessageStatsTracker {
         if (languageCode != null && !languageCode.isBlank()) {
             state.languageCode = languageCode;
         }
+    }
+
+    public synchronized Optional<ChatMessageStatsSnapshot> peekForChat(long chatId) {
+        ChatStatsState state = chatStats.get(chatId);
+        if (state == null || state.messageCounts.isEmpty()) {
+            return Optional.empty();
+        }
+
+        LinkedHashMap<String, Integer> sortedCounts = state.messageCounts.entrySet().stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue(Comparator.reverseOrder())
+                        .thenComparing(Map.Entry.comparingByKey()))
+                .collect(LinkedHashMap::new,
+                        (map, item) -> map.put(item.getKey(), item.getValue()),
+                        LinkedHashMap::putAll);
+
+        return Optional.of(new ChatMessageStatsSnapshot(chatId, state.languageCode, sortedCounts));
     }
 
     public synchronized List<ChatMessageStatsSnapshot> drainAll() {
